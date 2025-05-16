@@ -23,9 +23,12 @@ class ActividadService(
             val tarea = Tarea.creaInstancia(descripcion, null, etiquetas)
             repositorio.agregar(tarea)
             Logger.info("Tarea creada exitosamente | ID:${tarea.id} | Desc:${descripcion.take(15)}...")
-        } catch (e: Exception) {
-            Logger.error("Fallo creación tarea: ${e.message} | Stacktrace:", e)
+        } catch (e: IllegalArgumentException) {
+            Logger.error("Error de validación: ${e.message}", e)
             throw e
+        } catch (e: Exception) {
+            Logger.error("Error inesperado", e)
+            throw IllegalStateException("Error interno al crear tarea", e)
         }
     }
 
