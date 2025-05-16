@@ -1,6 +1,7 @@
 plugins {
     kotlin("jvm") version "2.0.20"
     id("io.kotest") version "0.3.9"
+    id("io.gitlab.arturbosch.detekt") version "1.23.6"
 }
 
 group = "es.prog2425.taskmanager"
@@ -29,6 +30,19 @@ tasks.test {
 tasks.withType<Test> {
     systemProperty("file.encoding", "UTF-8")
     useJUnitPlatform()
+}
+
+detekt {
+    toolVersion = "1.23.6"
+    config.setFrom(files("config/detekt.yml"))
+    buildUponDefaultConfig = true
+}
+
+tasks.withType<io.gitlab.arturbosch.detekt.Detekt>().configureEach {
+    reports {
+        html.required.set(true)
+        xml.required.set(false)
+    }
 }
 
 kotlin {

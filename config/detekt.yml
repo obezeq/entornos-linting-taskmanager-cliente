@@ -1,0 +1,28 @@
+build:
+  maxIssues: 0
+  weights:
+    complexity: 2
+    LongParameterList: 1
+    style: 1
+
+complexity:
+  CyclomaticComplexMethod:
+    active: true
+    threshold: 16
+  LongParameterList:
+    active: true
+    functionThreshold: 6
+    constructorThreshold: 6
+  TooManyFunctions:
+    active: true
+    thresholdInFiles: 30
+    thresholdInClasses: 20
+
+style:
+  MagicNumber:
+    active: true
+    ignoreNumbers: ["0", "1", "-1", "5", "15"]
+  NewLineAtEndOfFile:
+    active: false
+  MaxLineLength:
+    active: false
