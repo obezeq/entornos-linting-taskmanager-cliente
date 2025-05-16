@@ -1,0 +1,1136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap');
+    </style>
+    <meta charset="utf-8">
+    <title>detekt report</title>
+    <style>
+
+        body {
+            font-family: Arial, sans-serif;
+            font-weight: 400;
+        }
+
+        h1 {
+            font-family: Arial, sans-serif;
+            font-weight: 600;
+            width: fit-content;
+            background: -webkit-linear-gradient(left, rgba(105, 33, 224, 1), rgba(247, 44, 67, 1));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        h2 {
+            font-family: Arial, sans-serif;
+            font-weight: 400;
+            background: rgb(105, 33, 224);
+            background: linear-gradient(90deg, rgba(105, 33, 224, 0.8) 0%, rgba(158, 41, 156, 0.8) 50%, rgba(247, 44, 67, 0.8) 100%);
+            padding: 0.2em;
+            color: #ffffff;
+            border-radius: 4px;
+        }
+
+        h3 {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(90deg, rgba(105, 33, 224, 0.4) 0%, rgba(158, 41, 156, 0.4) 50%, rgba(247, 44, 67, 0.4) 100%);
+            padding: 0.5em;
+            border-radius: 4px;
+        }
+
+        .rule-container {
+            background: linear-gradient(90deg, rgba(105, 33, 224, 0.2) 0%, rgba(158, 41, 156, 0.2) 100%);
+            border-radius: 4px;
+            padding-left: 1em;
+            padding-bottom: 0.3em;
+            padding-top: 0.3em;
+            padding-right: 1em;
+            line-height: 1.5em;
+            margin-bottom: 8px;
+            margin-top: 8px;
+        }
+
+        .rule {
+            font-family: Arial, sans-serif;
+            padding: 0.3em;
+            font-weight: 600;
+            border-radius: 3px;
+        }
+
+        .description {
+            font-family: Arial, sans-serif;
+            color: #000000;
+            padding: 0.3em;
+        }
+
+        .location {
+            font-family: Jetbrains Mono, monospace;
+            font-weight: 500;
+            color: #000000;
+            display: block;
+        }
+
+        .message {
+            font-family: Arial, sans-serif;
+            font-size: 0.8em;
+            color: #444444;
+            display: block;
+            margin-top: 1pt;
+        }
+
+        code {
+            font-family: JetBrains Mono, monospace;
+            font-weight: 400;
+        }
+
+        pre {
+            font-family: JetBrains Mono, monospace;
+            font-weight: 500;
+            border: 1px solid #e0e0e0;
+            overflow: auto;
+        }
+
+        .lineno {
+            margin-right: 24px;
+            color: #9771c3;
+            background-color: rgba(230, 211, 243, 0.51);
+        }
+
+        .error {
+            background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH4AwCFR4T/3uLMgAAADxJREFUCNdNyLERQEAABMCjL4lQwIzcjErpguAL+C9AvgKJDbeD/PRpLdm35Hm+MU+cB+tCKaJW4L4YBy+CAiLJrFs9mgAAAABJRU5ErkJggg==) bottom repeat-x;
+        }
+
+        .exception {
+            color: #b60808;
+            display: inline-block;
+            background-color: #ecdada;
+            border-color: #b60808;
+            border-radius: 10px;
+            border: solid 2px;
+            padding-left: 16px;
+            padding-right: 16px;
+            margin-bottom: 16px;
+        }
+    </style>
+</head>
+<body>
+
+<svg xmlns="http://www.w3.org/2000/svg" width="225" height="53" viewBox="0 0 225 53" fill="none"
+     style="padding-top: 8px">
+    <path d="M88.8883 42.2665V7.99487H81.6954V20.389C79.9918 18.3703 77.6257 16.6332 73.7926 16.6332C67.7828 16.6332 62.2461 21.2341 62.2461 29.6377V29.7316C62.2461 38.1352 67.8774 42.736 73.7926 42.736C77.5311 42.736 79.9445 40.9989 81.6954 38.6516V42.2665H88.8883ZM81.79 29.7316C81.79 33.9099 78.998 36.6798 75.6382 36.6798C72.2783 36.6798 69.439 33.9099 69.439 29.7316V29.6377C69.439 25.4124 72.2783 22.6894 75.6382 22.6894C78.998 22.6894 81.79 25.4593 81.79 29.6377V29.7316Z"
+          fill="#222222"/>
+    <path d="M120.325 30.3888V30.2949C120.325 23.1589 116.444 16.6332 107.974 16.6332C100.591 16.6332 95.4334 22.5486 95.4334 29.7316V29.8254C95.4334 37.5248 101.065 42.8299 108.683 42.8299C113.274 42.8299 116.681 41.0459 119.047 38.1352L114.93 34.5202C112.942 36.3511 111.192 37.1023 108.778 37.1023C105.56 37.1023 103.289 35.4122 102.579 32.1728H120.23C120.277 31.5156 120.325 31.093 120.325 30.3888ZM113.321 27.7128H102.484C103.052 24.4734 104.992 22.3608 107.974 22.3608C111.002 22.3608 112.895 24.5204 113.321 27.7128Z"
+          fill="#222222"/>
+    <path d="M141.278 41.2337V35.5061C140.237 36.0695 139.054 36.3981 137.729 36.3981C136.12 36.3981 135.41 35.6 135.41 33.9568V23.2059H141.373V17.1027H135.41V10.6709H128.217V17.1027H125.189V23.2059H128.217V35.1305C128.217 40.952 131.199 42.6891 135.599 42.6891C138.013 42.6891 139.764 42.1257 141.278 41.2337Z"
+          fill="#222222"/>
+    <path d="M172.008 30.3888V30.2949C172.008 23.1589 168.128 16.6332 159.657 16.6332C152.275 16.6332 147.117 22.5486 147.117 29.7316V29.8254C147.117 37.5248 152.748 42.8299 160.367 42.8299C164.958 42.8299 168.365 41.0459 170.731 38.1352L166.614 34.5202C164.626 36.3511 162.875 37.1023 160.462 37.1023C157.244 37.1023 154.973 35.4122 154.263 32.1728H171.914C171.961 31.5156 172.008 31.093 172.008 30.3888ZM165.005 27.7128H154.168C154.736 24.4734 156.676 22.3608 159.657 22.3608C162.686 22.3608 164.579 24.5204 165.005 27.7128Z"
+          fill="#222222"/>
+    <path d="M203.278 42.2665L193.293 27.0086L202.947 17.1027H194.334L185.911 26.2574V7.99487H178.718V42.2665H185.911V34.6141L188.419 31.985L195.044 42.2665H203.278Z"
+          fill="#222222"/>
+    <path d="M224.905 41.2337V35.5061C223.864 36.0695 222.681 36.3981 221.356 36.3981C219.747 36.3981 219.037 35.6 219.037 33.9568V23.2059H225V17.1027H219.037V10.6709H211.844V17.1027H208.816V23.2059H211.844V35.1305C211.844 40.952 214.826 42.6891 219.227 42.6891C221.64 42.6891 223.391 42.1257 224.905 41.2337Z"
+          fill="#222222"/>
+    <path fill-rule="evenodd" clip-rule="evenodd"
+          d="M2.18611 0C0.978755 0 0 0.978755 0 2.18611V40.771C0 41.9783 0.978755 42.9571 2.18611 42.9571H24.2534C25.6525 42.9571 26.6258 41.5473 26.3774 40.1705C26.2109 39.2481 26.124 38.2981 26.124 37.3279C26.124 28.5443 33.2445 21.4239 42.028 21.4239C42.8689 21.4239 43.6945 21.4892 44.5001 21.6149C45.8578 21.8268 47.22 20.8585 47.22 19.4844V2.18611C47.22 0.978755 46.2412 0 45.0339 0H2.18611Z"
+          fill="url(#paint0_linear)"/>
+    <path d="M55.3358 48.6166L54.7673 48.0481L53.2421 46.5229L52.9516 46.2324C52.2427 45.5234 52.1855 44.4067 52.673 43.5306C53.6299 41.8109 54.1762 39.833 54.1762 37.7293C54.1762 32.9104 51.3147 28.7499 47.2029 26.8501C46.5196 26.5344 45.8024 26.2808 45.0573 26.0974C44.3636 25.9268 43.6467 25.8164 42.9118 25.7727C42.6749 25.7587 42.4369 25.7495 42.1966 25.7495C38.5166 25.7495 35.2203 27.4188 33.0211 30.0381C31.9784 31.2802 31.1838 32.7357 30.7114 34.3293C30.3916 35.4079 30.217 36.5481 30.217 37.7291C30.217 38.0293 30.2319 38.3259 30.2537 38.6205C30.3082 39.3559 30.4265 40.0733 30.6082 40.766C30.8038 41.5117 31.0689 42.2296 31.3974 42.9116C33.3332 46.9295 37.4465 49.7089 42.1967 49.7089C43.957 49.7089 45.6291 49.3259 47.1357 48.6403C47.9841 48.2543 49.0046 48.3536 49.6636 49.0127L50.0894 49.4385L51.6301 50.9794L52.3016 51.6509C52.7205 52.0699 53.2697 52.2794 53.8186 52.2794C54.3677 52.2794 54.9169 52.0699 55.3357 51.6509C56.1738 50.8129 56.1738 49.4544 55.3358 48.6166ZM42.1967 45.418C39.9525 45.418 37.93 44.451 36.5232 42.9122C35.9485 42.2836 35.4772 41.5594 35.135 40.7667C34.845 40.0954 34.6493 39.3746 34.5617 38.6211C34.5277 38.3283 34.5084 38.0314 34.5084 37.7297C34.5084 33.4903 37.9574 30.0413 42.1968 30.0413C42.4379 30.0413 42.6762 30.0539 42.912 30.0756C43.6638 30.1455 44.3837 30.3242 45.0576 30.5956C45.8458 30.9127 46.5689 31.3564 47.2031 31.902C48.8434 33.3131 49.8852 35.4015 49.8852 37.7297C49.885 41.9688 46.4361 45.418 42.1967 45.418Z"
+          fill="url(#paint1_linear)"/>
+    <path d="M9.9936 25.6979C9.34217 25.6979 8.84618 25.4958 8.50566 25.0914C8.16514 24.6709 7.99487 24.1695 7.99487 23.5873V23.4903C7.99487 22.908 8.16514 22.4147 8.50566 22.0104C8.84618 21.5899 9.34217 21.3796 9.9936 21.3796C10.645 21.3796 11.141 21.5899 11.4815 22.0104C11.8221 22.4147 11.9923 22.908 11.9923 23.4903V23.5873C11.9923 24.1695 11.8221 24.6709 11.4815 25.0914C11.141 25.4958 10.645 25.6979 9.9936 25.6979ZM8.17254 10.8158V7.99487H11.8147V10.8158L10.6598 19.1612H9.32736L8.17254 10.8158Z"
+          fill="white"/>
+    <path d="M20.2729 25.6979C19.6215 25.6979 19.1255 25.4958 18.785 25.0914C18.4444 24.6709 18.2742 24.1695 18.2742 23.5873V23.4903C18.2742 22.908 18.4444 22.4147 18.785 22.0104C19.1255 21.5899 19.6215 21.3796 20.2729 21.3796C20.9243 21.3796 21.4203 21.5899 21.7608 22.0104C22.1014 22.4147 22.2716 22.908 22.2716 23.4903V23.5873C22.2716 24.1695 22.1014 24.6709 21.7608 25.0914C21.4203 25.4958 20.9243 25.6979 20.2729 25.6979ZM18.4518 10.8158V7.99487H22.094V10.8158L20.9391 19.1612H19.6067L18.4518 10.8158Z"
+          fill="white"/>
+    <defs>
+        <linearGradient id="paint0_linear" x1="5.222e-07" y1="41.3361" x2="51.982" y2="33.29"
+                        gradientUnits="userSpaceOnUse">
+            <stop stop-color="#7942EE"/>
+            <stop offset="1" stop-color="#FF4651"/>
+        </linearGradient>
+        <linearGradient id="paint1_linear" x1="53.0121" y1="51.5465" x2="60.9801" y2="30.2423"
+                        gradientUnits="userSpaceOnUse">
+            <stop stop-color="#7942EE"/>
+            <stop offset="1" stop-color="#FF4651"/>
+        </linearGradient>
+    </defs>
+</svg>
+
+<h2>Metrics</h2>
+
+<div>
+  <ul>
+    <li>103 number of properties</li>
+    <li>79 number of functions</li>
+    <li>18 number of classes</li>
+    <li>6 number of packages</li>
+    <li>17 number of kt files</li>
+  </ul>
+</div>
+
+
+<h2>Complexity Report</h2>
+
+<div>
+  <ul>
+    <li>1,224 lines of code (loc)</li>
+    <li>986 source lines of code (sloc)</li>
+    <li>755 logical lines of code (lloc)</li>
+    <li>45 comment lines of code (cloc)</li>
+    <li>211 cyclomatic complexity (mcc)</li>
+    <li>97 cognitive complexity</li>
+    <li>93 number of total code smells</li>
+    <li>4% comment source ratio</li>
+    <li>279 mcc per 1,000 lloc</li>
+    <li>123 code smells per 1,000 lloc</li>
+  </ul>
+</div>
+
+
+<h2>Findings</h2>
+<div>Total: 93
+  <h3>complexity: 5</h3>
+  <details id="CyclomaticComplexMethod" open="open">
+    <summary class="rule-container"><span class="rule">CyclomaticComplexMethod: 1 </span><span class="description">Prefer splitting up complex methods into smaller, easier to test methods.</span></summary>
+<a href="https://detekt.dev/docs/rules/complexity#cyclomaticcomplexmethod">Documentation</a>
+    <ul>
+      <li><span class="location">D:/ezequiel/INSTITUTO/Entornos de desarrollo/entornos-linting-taskmanager-cliente/src/main/kotlin/aplicacion/ActividadService.kt:74:17</span><span class="message">The function obtenerPorFecha appears to be too complex based on Cyclomatic Complexity (complexity: 16). Defined complexity threshold for methods is set to '15'</span>
+        <pre><code><span class="lineno">  71 </span>        return obtenerPorFecha(fecha)
+<span class="lineno">  72 </span>    }
+<span class="lineno">  73 </span>
+<span class="lineno">  74 </span>    private fun <span class="error">obtenerPorFecha</span>(fecha: String): List&lt;Evento&gt; {
+<span class="lineno">  75 </span>        val hoy = LocalDate.now()
+<span class="lineno">  76 </span>        val eventos = repositorio.listar().filterIsInstance&lt;Evento&gt;()
+<span class="lineno">  77 </span>        val lista = mutableListOf&lt;Evento&gt;()
+</code></pre>
+      </li>
+    </ul>
+  </details>
+  <details id="LongParameterList" open="open">
+    <summary class="rule-container"><span class="rule">LongParameterList: 2 </span><span class="description">The more parameters a function has the more complex it is. Long parameter lists are often used to control complex algorithms and violate the Single Responsibility Principle. Prefer functions with short parameter lists.</span></summary>
+<a href="https://detekt.dev/docs/rules/complexity#longparameterlist">Documentation</a>
+    <ul>
+      <li><span class="location">D:/ezequiel/INSTITUTO/Entornos de desarrollo/entornos-linting-taskmanager-cliente/src/main/kotlin/dominio/Evento.kt:7:33</span><span class="message">The constructor(id: Long, fechaCreacion: String, descripcion: String, fecha: String, ubicacion: String, etiquetas: List&lt;String&gt;) has too many parameters. The current threshold is set to 5.</span>
+        <pre><code><span class="lineno">   4 </span>import es.prog2425.taskmanager.utilidades.Utils
+<span class="lineno">   5 </span>
+<span class="lineno">   6 </span>
+<span class="lineno">   7 </span>class Evento private constructor<span class="error">(</span>
+<span class="lineno">   8 </span><span class="error">    id: Long,</span>
+<span class="lineno">   9 </span><span class="error">    fechaCreacion: String,</span>
+<span class="lineno">  10 </span><span class="error">    descripcion: String,</span>
+</code></pre>
+      </li>
+      <li><span class="location">D:/ezequiel/INSTITUTO/Entornos de desarrollo/entornos-linting-taskmanager-cliente/src/main/kotlin/dominio/Tarea.kt:6:32</span><span class="message">The constructor(id: Long, fechaCreacion: String, descripcion: String, estado: Estado, parent: Tarea?, asignadoA: Usuario?, etiquetas: List&lt;String&gt;) has too many parameters. The current threshold is set to 5.</span>
+        <pre><code><span class="lineno">   3 </span>import es.prog2425.taskmanager.utilidades.Logger
+<span class="lineno">   4 </span>import es.prog2425.taskmanager.utilidades.Utils
+<span class="lineno">   5 </span>
+<span class="lineno">   6 </span>class Tarea private constructor<span class="error">(</span>
+<span class="lineno">   7 </span><span class="error">    id: Long,</span>
+<span class="lineno">   8 </span><span class="error">    fechaCreacion: String,</span>
+<span class="lineno">   9 </span><span class="error">    descripcion: String,</span>
+</code></pre>
+      </li>
+    </ul>
+  </details>
+  <details id="TooManyFunctions" open="open">
+    <summary class="rule-container"><span class="rule">TooManyFunctions: 2 </span><span class="description">Too many functions inside a/an file/class/object/interface always indicate a violation of the single responsibility principle. Maybe the file/class/object/interface wants to manage too many things at once. Extract functionality which clearly belongs together.</span></summary>
+<a href="https://detekt.dev/docs/rules/complexity#toomanyfunctions">Documentation</a>
+    <ul>
+      <li><span class="location">D:/ezequiel/INSTITUTO/Entornos de desarrollo/entornos-linting-taskmanager-cliente/src/main/kotlin/aplicacion/ActividadService.kt:10:7</span><span class="message">Class 'ActividadService' with '20' functions detected. Defined threshold inside classes is set to '11'</span>
+        <pre><code><span class="lineno">   7 </span>import java.time.LocalDate
+<span class="lineno">   8 </span>import java.time.format.DateTimeFormatter
+<span class="lineno">   9 </span>
+<span class="lineno">  10 </span>class <span class="error">ActividadService</span>(
+<span class="lineno">  11 </span>    private val repositorio: IActividadRepository,
+<span class="lineno">  12 </span>    private val userRepository: UserRepository
+<span class="lineno">  13 </span>) {
+</code></pre>
+      </li>
+      <li><span class="location">D:/ezequiel/INSTITUTO/Entornos de desarrollo/entornos-linting-taskmanager-cliente/src/main/kotlin/presentacion/ConsolaUI.kt:10:7</span><span class="message">Class 'ConsolaUI' with '24' functions detected. Defined threshold inside classes is set to '11'</span>
+        <pre><code><span class="lineno">   7 </span>import es.prog2425.taskmanager.utilidades.Logger
+<span class="lineno">   8 </span>import es.prog2425.taskmanager.utilidades.Utils
+<span class="lineno">   9 </span>
+<span class="lineno">  10 </span>class <span class="error">ConsolaUI</span>(private val servicio: ActividadService) {
+<span class="lineno">  11 </span>
+<span class="lineno">  12 </span>    fun iniciar() {
+<span class="lineno">  13 </span>        Logger.info(&quot;Sistema interactivo iniciado&quot;)
+</code></pre>
+      </li>
+    </ul>
+  </details>
+  <h3>exceptions: 18</h3>
+  <details id="SwallowedException" open="open">
+    <summary class="rule-container"><span class="rule">SwallowedException: 2 </span><span class="description">The caught exception is swallowed. The original exception could be lost.</span></summary>
+<a href="https://detekt.dev/docs/rules/exceptions#swallowedexception">Documentation</a>
+    <ul>
+      <li><span class="location">D:/ezequiel/INSTITUTO/Entornos de desarrollo/entornos-linting-taskmanager-cliente/src/main/kotlin/aplicacion/ActividadService.kt:81:22</span><span class="message">The caught exception is swallowed. The original exception could be lost.</span>
+        <pre><code><span class="lineno">  78 </span>        fun fechaValida(evento: Evento): LocalDate? {
+<span class="lineno">  79 </span>            return try {
+<span class="lineno">  80 </span>                LocalDate.parse(evento.fecha, DateTimeFormatter.ofPattern(&quot;dd-MM-yyyy&quot;))
+<span class="lineno">  81 </span>            } catch (<span class="error">e: Exception</span>) {
+<span class="lineno">  82 </span>                null
+<span class="lineno">  83 </span>            }
+<span class="lineno">  84 </span>        }
+</code></pre>
+      </li>
+      <li><span class="location">D:/ezequiel/INSTITUTO/Entornos de desarrollo/entornos-linting-taskmanager-cliente/src/main/kotlin/aplicacion/ActividadService.kt:166:22</span><span class="message">The caught exception is swallowed. The original exception could be lost.</span>
+        <pre><code><span class="lineno"> 163 </span>        fun fechaValida(evento: Evento): LocalDate? {
+<span class="lineno"> 164 </span>            return try {
+<span class="lineno"> 165 </span>                LocalDate.parse(evento.fecha, DateTimeFormatter.ofPattern(&quot;dd-MM-yyyy&quot;))
+<span class="lineno"> 166 </span>            } catch (<span class="error">e: Exception</span>) {
+<span class="lineno"> 167 </span>                null
+<span class="lineno"> 168 </span>            }
+<span class="lineno"> 169 </span>        }
+</code></pre>
+      </li>
+    </ul>
+  </details>
+  <details id="TooGenericExceptionCaught" open="open">
+    <summary class="rule-container"><span class="rule">TooGenericExceptionCaught: 16 </span><span class="description">The caught exception is too generic. Prefer catching specific exceptions to the case that is currently handled.</span></summary>
+<a href="https://detekt.dev/docs/rules/exceptions#toogenericexceptioncaught">Documentation</a>
+    <ul>
+      <li><span class="location">D:/ezequiel/INSTITUTO/Entornos de desarrollo/entornos-linting-taskmanager-cliente/src/main/kotlin/Main.kt:28:14</span><span class="message">The caught exception is too generic. Prefer catching specific exceptions to the case that is currently handled.</span>
+        <pre><code><span class="lineno">  25 </span>
+<span class="lineno">  26 </span>        Logger.info(&quot;Servicios inicializados - Iniciando UI&quot;)
+<span class="lineno">  27 </span>        consola.iniciar()
+<span class="lineno">  28 </span>    } catch (<span class="error">e: Exception</span>) {
+<span class="lineno">  29 </span>        Logger.error(&quot;Error crítico durante la inicialización: ${e.message}&quot;, e)
+<span class="lineno">  30 </span>        exitProcess(1)
+<span class="lineno">  31 </span>    }
+</code></pre>
+      </li>
+      <li><span class="location">D:/ezequiel/INSTITUTO/Entornos de desarrollo/entornos-linting-taskmanager-cliente/src/main/kotlin/aplicacion/ActividadService.kt:26:18</span><span class="message">The caught exception is too generic. Prefer catching specific exceptions to the case that is currently handled.</span>
+        <pre><code><span class="lineno">  23 </span>            val tarea = Tarea.creaInstancia(descripcion, null, etiquetas)
+<span class="lineno">  24 </span>            repositorio.agregar(tarea)
+<span class="lineno">  25 </span>            Logger.info(&quot;Tarea creada exitosamente | ID:${tarea.id} | Desc:${descripcion.take(15)}...&quot;)
+<span class="lineno">  26 </span>        } catch (<span class="error">e: Exception</span>) {
+<span class="lineno">  27 </span>            Logger.error(&quot;Fallo creación tarea: ${e.message} | Stacktrace:&quot;, e)
+<span class="lineno">  28 </span>            throw e
+<span class="lineno">  29 </span>        }
+</code></pre>
+      </li>
+      <li><span class="location">D:/ezequiel/INSTITUTO/Entornos de desarrollo/entornos-linting-taskmanager-cliente/src/main/kotlin/aplicacion/ActividadService.kt:81:22</span><span class="message">The caught exception is too generic. Prefer catching specific exceptions to the case that is currently handled.</span>
+        <pre><code><span class="lineno">  78 </span>        fun fechaValida(evento: Evento): LocalDate? {
+<span class="lineno">  79 </span>            return try {
+<span class="lineno">  80 </span>                LocalDate.parse(evento.fecha, DateTimeFormatter.ofPattern(&quot;dd-MM-yyyy&quot;))
+<span class="lineno">  81 </span>            } catch (<span class="error">e: Exception</span>) {
+<span class="lineno">  82 </span>                null
+<span class="lineno">  83 </span>            }
+<span class="lineno">  84 </span>        }
+</code></pre>
+      </li>
+      <li><span class="location">D:/ezequiel/INSTITUTO/Entornos de desarrollo/entornos-linting-taskmanager-cliente/src/main/kotlin/aplicacion/ActividadService.kt:166:22</span><span class="message">The caught exception is too generic. Prefer catching specific exceptions to the case that is currently handled.</span>
+        <pre><code><span class="lineno"> 163 </span>        fun fechaValida(evento: Evento): LocalDate? {
+<span class="lineno"> 164 </span>            return try {
+<span class="lineno"> 165 </span>                LocalDate.parse(evento.fecha, DateTimeFormatter.ofPattern(&quot;dd-MM-yyyy&quot;))
+<span class="lineno"> 166 </span>            } catch (<span class="error">e: Exception</span>) {
+<span class="lineno"> 167 </span>                null
+<span class="lineno"> 168 </span>            }
+<span class="lineno"> 169 </span>        }
+</code></pre>
+      </li>
+      <li><span class="location">D:/ezequiel/INSTITUTO/Entornos de desarrollo/entornos-linting-taskmanager-cliente/src/main/kotlin/datos/ActividadRepositoryMemoria.kt:19:18</span><span class="message">The caught exception is too generic. Prefer catching specific exceptions to the case that is currently handled.</span>
+        <pre><code><span class="lineno">  16 </span>            }
+<span class="lineno">  17 </span>            actividades.add(actividad)
+<span class="lineno">  18 </span>            Logger.info(&quot;Actividad ${actividad.id} almacenada (Total: ${actividades.size})&quot;)
+<span class="lineno">  19 </span>        } catch (<span class="error">e: Exception</span>) {
+<span class="lineno">  20 </span>            Logger.error(&quot;Error almacenando actividad: ${e.message}&quot;, e)
+<span class="lineno">  21 </span>            throw e
+<span class="lineno">  22 </span>        }
+</code></pre>
+      </li>
+      <li><span class="location">D:/ezequiel/INSTITUTO/Entornos de desarrollo/entornos-linting-taskmanager-cliente/src/main/kotlin/datos/UserRepositoryMemoria.kt:22:18</span><span class="message">The caught exception is too generic. Prefer catching specific exceptions to the case that is currently handled.</span>
+        <pre><code><span class="lineno">  19 </span>            usuarios.add(nuevoUsuario)
+<span class="lineno">  20 </span>            Logger.info(&quot;Usuario creado: ID:${nuevoUsuario.id} | ${nuevoUsuario.email}&quot;)
+<span class="lineno">  21 </span>            Logger.debug(&quot;Repositorio usuarios: ${usuarios.size + 1} registros&quot;)
+<span class="lineno">  22 </span>        } catch (<span class="error">e: Exception</span>) {
+<span class="lineno">  23 </span>            Logger.error(&quot;Error creando usuario: ${e.message}&quot;, e)
+<span class="lineno">  24 </span>            throw e
+<span class="lineno">  25 </span>        }
+</code></pre>
+      </li>
+      <li><span class="location">D:/ezequiel/INSTITUTO/Entornos de desarrollo/entornos-linting-taskmanager-cliente/src/main/kotlin/dominio/Evento.kt:26:18</span><span class="message">The caught exception is too generic. Prefer catching specific exceptions to the case that is currently handled.</span>
+        <pre><code><span class="lineno">  23 </span>                Logger.warn(&quot;Ubicación vacía en evento ID:$id&quot;)
+<span class="lineno">  24 </span>                &quot;Ubicación vacía&quot;
+<span class="lineno">  25 </span>            }
+<span class="lineno">  26 </span>        } catch (<span class="error">e: Exception</span>) {
+<span class="lineno">  27 </span>            Logger.error(&quot;Error validación evento: ${e.message}&quot;)
+<span class="lineno">  28 </span>            throw e
+<span class="lineno">  29 </span>        }
+</code></pre>
+      </li>
+      <li><span class="location">D:/ezequiel/INSTITUTO/Entornos de desarrollo/entornos-linting-taskmanager-cliente/src/main/kotlin/dominio/Tarea.kt:57:18</span><span class="message">The caught exception is too generic. Prefer catching specific exceptions to the case that is currently handled.</span>
+        <pre><code><span class="lineno">  54 </span>            registrarAccion(&quot;CambioEstado&quot;, &quot;${this.estado} → $estado&quot;)
+<span class="lineno">  55 </span>            this.estado = estado
+<span class="lineno">  56 </span>            Logger.debug(&quot;Estado actualizado correctamente&quot;)
+<span class="lineno">  57 </span>        } catch (<span class="error">e: Exception</span>) {
+<span class="lineno">  58 </span>            Logger.error(&quot;Error cambiando estado tarea $id: ${e.message}&quot;)
+<span class="lineno">  59 </span>            throw e
+<span class="lineno">  60 </span>        }
+</code></pre>
+      </li>
+      <li><span class="location">D:/ezequiel/INSTITUTO/Entornos de desarrollo/entornos-linting-taskmanager-cliente/src/main/kotlin/presentacion/ConsolaUI.kt:31:22</span><span class="message">The caught exception is too generic. Prefer catching specific exceptions to the case that is currently handled.</span>
+        <pre><code><span class="lineno">  28 </span>                    print(&quot;[+] Presiona ENTER para continuar...&quot;)
+<span class="lineno">  29 </span>                    readln()
+<span class="lineno">  30 </span>                }
+<span class="lineno">  31 </span>            } catch (<span class="error">e: Exception</span>) {
+<span class="lineno">  32 </span>                Logger.error(&quot;Error en flujo principal: ${e.javaClass.simpleName} - ${e.message}&quot;)
+<span class="lineno">  33 </span>            }
+<span class="lineno">  34 </span>        } while (opcion != 4)
+</code></pre>
+      </li>
+      <li><span class="location">D:/ezequiel/INSTITUTO/Entornos de desarrollo/entornos-linting-taskmanager-cliente/src/main/kotlin/presentacion/ConsolaUI.kt:85:18</span><span class="message">The caught exception is too generic. Prefer catching specific exceptions to the case that is currently handled.</span>
+        <pre><code><span class="lineno">  82 </span>        try {
+<span class="lineno">  83 </span>            val usuario = servicio.crearUsuario(nombre, email)
+<span class="lineno">  84 </span>            println(&quot;[+] Usuario creado: ${usuario.nombre}&quot;)
+<span class="lineno">  85 </span>        } catch (<span class="error">e: Exception</span>) {
+<span class="lineno">  86 </span>            Logger.error(&quot;No se ha podido crear el usuario correctamente&quot;)
+<span class="lineno">  87 </span>            println(&quot;[-] Error al crear usuario: ${e.message}&quot;)
+<span class="lineno">  88 </span>        }
+</code></pre>
+      </li>
+      <li><span class="location">D:/ezequiel/INSTITUTO/Entornos de desarrollo/entornos-linting-taskmanager-cliente/src/main/kotlin/presentacion/ConsolaUI.kt:111:18</span><span class="message">The caught exception is too generic. Prefer catching specific exceptions to the case that is currently handled.</span>
+        <pre><code><span class="lineno"> 108 </span>        try {
+<span class="lineno"> 109 </span>            servicio.asignarTarea(tareaId, usuarioId)
+<span class="lineno"> 110 </span>            println(&quot;[+] Tarea asignada correctamente&quot;)
+<span class="lineno"> 111 </span>        } catch (<span class="error">e: Exception</span>) {
+<span class="lineno"> 112 </span>            Logger.error(e.message.toString())
+<span class="lineno"> 113 </span>        }
+<span class="lineno"> 114 </span>    }
+</code></pre>
+      </li>
+      <li><span class="location">D:/ezequiel/INSTITUTO/Entornos de desarrollo/entornos-linting-taskmanager-cliente/src/main/kotlin/presentacion/ConsolaUI.kt:138:18</span><span class="message">The caught exception is too generic. Prefer catching specific exceptions to the case that is currently handled.</span>
+        <pre><code><span class="lineno"> 135 </span>                    mostrarHistorial(tareas[seleccion - 1].id)
+<span class="lineno"> 136 </span>                }
+<span class="lineno"> 137 </span>            }
+<span class="lineno"> 138 </span>        } catch (<span class="error">e: Exception</span>) {
+<span class="lineno"> 139 </span>            Logger.error(&quot;${e.message}&quot;)
+<span class="lineno"> 140 </span>        }
+<span class="lineno"> 141 </span>    }
+</code></pre>
+      </li>
+      <li><span class="location">D:/ezequiel/INSTITUTO/Entornos de desarrollo/entornos-linting-taskmanager-cliente/src/main/kotlin/presentacion/ConsolaUI.kt:208:18</span><span class="message">The caught exception is too generic. Prefer catching specific exceptions to the case that is currently handled.</span>
+        <pre><code><span class="lineno"> 205 </span>        try {
+<span class="lineno"> 206 </span>            servicio.crearEvento(descripcion, fecha, ubicacion)
+<span class="lineno"> 207 </span>            println(&quot;[+] Evento creado correctamente&quot;)
+<span class="lineno"> 208 </span>        } catch (<span class="error">e: Exception</span>) {
+<span class="lineno"> 209 </span>            Logger.warn(&quot;Error al crear evento: ${e.message}&quot;)
+<span class="lineno"> 210 </span>            println(&quot;[-] Error al crear evento: ${e.message}&quot;)
+<span class="lineno"> 211 </span>
+</code></pre>
+      </li>
+      <li><span class="location">D:/ezequiel/INSTITUTO/Entornos de desarrollo/entornos-linting-taskmanager-cliente/src/main/kotlin/presentacion/ConsolaUI.kt:330:18</span><span class="message">The caught exception is too generic. Prefer catching specific exceptions to the case that is currently handled.</span>
+        <pre><code><span class="lineno"> 327 </span>        try {
+<span class="lineno"> 328 </span>            servicio.crearSubtarea(id, desc)
+<span class="lineno"> 329 </span>            println(&quot;[+] Subtarea creada correctamente&quot;)
+<span class="lineno"> 330 </span>        } catch (<span class="error">e: Exception</span>) {
+<span class="lineno"> 331 </span>            println(&quot;[-] Error: ${e.message}&quot;)
+<span class="lineno"> 332 </span>        }
+<span class="lineno"> 333 </span>    }
+</code></pre>
+      </li>
+      <li><span class="location">D:/ezequiel/INSTITUTO/Entornos de desarrollo/entornos-linting-taskmanager-cliente/src/main/kotlin/presentacion/ConsolaUI.kt:353:18</span><span class="message">The caught exception is too generic. Prefer catching specific exceptions to the case that is currently handled.</span>
+        <pre><code><span class="lineno"> 350 </span>        try {
+<span class="lineno"> 351 </span>            servicio.cambiarEstadoTarea(id, leerOpcion())
+<span class="lineno"> 352 </span>            println(&quot;[+] Estado actualizado&quot;)
+<span class="lineno"> 353 </span>        } catch (<span class="error">e: Exception</span>) {
+<span class="lineno"> 354 </span>            Logger.error(&quot;Error al cambiar de estado: ${e.message}&quot;)
+<span class="lineno"> 355 </span>        }
+<span class="lineno"> 356 </span>    }
+</code></pre>
+      </li>
+      <li><span class="location">D:/ezequiel/INSTITUTO/Entornos de desarrollo/entornos-linting-taskmanager-cliente/src/main/kotlin/presentacion/ConsolaUI.kt:404:18</span><span class="message">The caught exception is too generic. Prefer catching specific exceptions to the case that is currently handled.</span>
+        <pre><code><span class="lineno"> 401 </span>            }
+<span class="lineno"> 402 </span>
+<span class="lineno"> 403 </span>            println(&quot;└──────────┴──────────┴────────────────┘&quot;)
+<span class="lineno"> 404 </span>        } catch (<span class="error">e: Exception</span>) {
+<span class="lineno"> 405 </span>            println(&quot;[-] Error al obtener historial: ${e.message}&quot;)
+<span class="lineno"> 406 </span>        }
+<span class="lineno"> 407 </span>    }
+</code></pre>
+      </li>
+    </ul>
+  </details>
+  <h3>naming: 18</h3>
+  <details id="InvalidPackageDeclaration" open="open">
+    <summary class="rule-container"><span class="rule">InvalidPackageDeclaration: 17 </span><span class="description">Kotlin source files should be stored in the directory corresponding to its package statement.</span></summary>
+<a href="https://detekt.dev/docs/rules/naming#invalidpackagedeclaration">Documentation</a>
+    <ul>
+      <li><span class="location">D:/ezequiel/INSTITUTO/Entornos de desarrollo/entornos-linting-taskmanager-cliente/src/main/kotlin/Main.kt:1:1</span><span class="message">The package declaration does not match the actual file location.</span>
+        <pre><code><span class="lineno">   1 </span><span class="error">package es.prog2425.taskmanager</span>
+<span class="lineno">   2 </span>
+<span class="lineno">   3 </span>import es.prog2425.taskmanager.aplicacion.ActividadService
+<span class="lineno">   4 </span>import es.prog2425.taskmanager.datos.ActividadRepositoryMemoria
+</code></pre>
+      </li>
+      <li><span class="location">D:/ezequiel/INSTITUTO/Entornos de desarrollo/entornos-linting-taskmanager-cliente/src/main/kotlin/aplicacion/ActividadService.kt:1:1</span><span class="message">The package declaration does not match the actual file location.</span>
+        <pre><code><span class="lineno">   1 </span><span class="error">package es.prog2425.taskmanager.aplicacion</span>
+<span class="lineno">   2 </span>
+<span class="lineno">   3 </span>import es.prog2425.taskmanager.datos.IActividadRepository
+<span class="lineno">   4 </span>import es.prog2425.taskmanager.datos.UserRepository
+</code></pre>
+      </li>
+      <li><span class="location">D:/ezequiel/INSTITUTO/Entornos de desarrollo/entornos-linting-taskmanager-cliente/src/main/kotlin/aplicacion/ResumenEventos.kt:1:1</span><span class="message">The package declaration does not match the actual file location.</span>
+        <pre><code><span class="lineno">   1 </span><span class="error">package es.prog2425.taskmanager.aplicacion</span>
+<span class="lineno">   2 </span>
+<span class="lineno">   3 </span>data class ResumenEventos(
+<span class="lineno">   4 </span>    val hoy: Int,
+</code></pre>
+      </li>
+      <li><span class="location">D:/ezequiel/INSTITUTO/Entornos de desarrollo/entornos-linting-taskmanager-cliente/src/main/kotlin/aplicacion/ResumenTareas.kt:1:1</span><span class="message">The package declaration does not match the actual file location.</span>
+        <pre><code><span class="lineno">   1 </span><span class="error">package es.prog2425.taskmanager.aplicacion</span>
+<span class="lineno">   2 </span>
+<span class="lineno">   3 </span>import es.prog2425.taskmanager.dominio.Estado
+<span class="lineno">   4 </span>
+</code></pre>
+      </li>
+      <li><span class="location">D:/ezequiel/INSTITUTO/Entornos de desarrollo/entornos-linting-taskmanager-cliente/src/main/kotlin/datos/ActividadRepositoryMemoria.kt:1:1</span><span class="message">The package declaration does not match the actual file location.</span>
+        <pre><code><span class="lineno">   1 </span><span class="error">package es.prog2425.taskmanager.datos</span>
+<span class="lineno">   2 </span>
+<span class="lineno">   3 </span>import es.prog2425.taskmanager.dominio.Actividad
+<span class="lineno">   4 </span>import es.prog2425.taskmanager.utilidades.Logger
+</code></pre>
+      </li>
+      <li><span class="location">D:/ezequiel/INSTITUTO/Entornos de desarrollo/entornos-linting-taskmanager-cliente/src/main/kotlin/datos/IActividadRepository.kt:1:1</span><span class="message">The package declaration does not match the actual file location.</span>
+        <pre><code><span class="lineno">   1 </span><span class="error">package es.prog2425.taskmanager.datos</span>
+<span class="lineno">   2 </span>
+<span class="lineno">   3 </span>import es.prog2425.taskmanager.dominio.Actividad
+<span class="lineno">   4 </span>
+</code></pre>
+      </li>
+      <li><span class="location">D:/ezequiel/INSTITUTO/Entornos de desarrollo/entornos-linting-taskmanager-cliente/src/main/kotlin/datos/UserRepository.kt:1:1</span><span class="message">The package declaration does not match the actual file location.</span>
+        <pre><code><span class="lineno">   1 </span><span class="error">package es.prog2425.taskmanager.datos</span>
+<span class="lineno">   2 </span>
+<span class="lineno">   3 </span>import es.prog2425.taskmanager.dominio.Usuario
+<span class="lineno">   4 </span>
+</code></pre>
+      </li>
+      <li><span class="location">D:/ezequiel/INSTITUTO/Entornos de desarrollo/entornos-linting-taskmanager-cliente/src/main/kotlin/datos/UserRepositoryMemoria.kt:1:1</span><span class="message">The package declaration does not match the actual file location.</span>
+        <pre><code><span class="lineno">   1 </span><span class="error">package es.prog2425.taskmanager.datos</span>
+<span class="lineno">   2 </span>
+<span class="lineno">   3 </span>import es.prog2425.taskmanager.dominio.Usuario
+<span class="lineno">   4 </span>import es.prog2425.taskmanager.utilidades.Logger
+</code></pre>
+      </li>
+      <li><span class="location">D:/ezequiel/INSTITUTO/Entornos de desarrollo/entornos-linting-taskmanager-cliente/src/main/kotlin/dominio/Actividad.kt:1:1</span><span class="message">The package declaration does not match the actual file location.</span>
+        <pre><code><span class="lineno">   1 </span><span class="error">package es.prog2425.taskmanager.dominio</span>
+<span class="lineno">   2 </span>
+<span class="lineno">   3 </span>abstract class Actividad(
+<span class="lineno">   4 </span>    var id: Long,
+</code></pre>
+      </li>
+      <li><span class="location">D:/ezequiel/INSTITUTO/Entornos de desarrollo/entornos-linting-taskmanager-cliente/src/main/kotlin/dominio/Estado.kt:1:1</span><span class="message">The package declaration does not match the actual file location.</span>
+        <pre><code><span class="lineno">   1 </span><span class="error">package es.prog2425.taskmanager.dominio</span>
+<span class="lineno">   2 </span>
+<span class="lineno">   3 </span>enum class Estado { ABIERTA, FINALIZADA, EN_PROGRESO }
+</code></pre>
+      </li>
+      <li><span class="location">D:/ezequiel/INSTITUTO/Entornos de desarrollo/entornos-linting-taskmanager-cliente/src/main/kotlin/dominio/Evento.kt:1:1</span><span class="message">The package declaration does not match the actual file location.</span>
+        <pre><code><span class="lineno">   1 </span><span class="error">package es.prog2425.taskmanager.dominio</span>
+<span class="lineno">   2 </span>
+<span class="lineno">   3 </span>import es.prog2425.taskmanager.utilidades.Logger
+<span class="lineno">   4 </span>import es.prog2425.taskmanager.utilidades.Utils
+</code></pre>
+      </li>
+      <li><span class="location">D:/ezequiel/INSTITUTO/Entornos de desarrollo/entornos-linting-taskmanager-cliente/src/main/kotlin/dominio/Tarea.kt:1:1</span><span class="message">The package declaration does not match the actual file location.</span>
+        <pre><code><span class="lineno">   1 </span><span class="error">package es.prog2425.taskmanager.dominio</span>
+<span class="lineno">   2 </span>
+<span class="lineno">   3 </span>import es.prog2425.taskmanager.utilidades.Logger
+<span class="lineno">   4 </span>import es.prog2425.taskmanager.utilidades.Utils
+</code></pre>
+      </li>
+      <li><span class="location">D:/ezequiel/INSTITUTO/Entornos de desarrollo/entornos-linting-taskmanager-cliente/src/main/kotlin/dominio/Usuario.kt:1:1</span><span class="message">The package declaration does not match the actual file location.</span>
+        <pre><code><span class="lineno">   1 </span><span class="error">package es.prog2425.taskmanager.dominio</span>
+<span class="lineno">   2 </span>
+<span class="lineno">   3 </span>data class Usuario(
+<span class="lineno">   4 </span>    val id: Int,
+</code></pre>
+      </li>
+      <li><span class="location">D:/ezequiel/INSTITUTO/Entornos de desarrollo/entornos-linting-taskmanager-cliente/src/main/kotlin/presentacion/ConsolaUI.kt:1:1</span><span class="message">The package declaration does not match the actual file location.</span>
+        <pre><code><span class="lineno">   1 </span><span class="error">package es.prog2425.taskmanager.presentacion</span>
+<span class="lineno">   2 </span>
+<span class="lineno">   3 </span>import es.prog2425.taskmanager.aplicacion.ActividadService
+<span class="lineno">   4 </span>import es.prog2425.taskmanager.dominio.Actividad
+</code></pre>
+      </li>
+      <li><span class="location">D:/ezequiel/INSTITUTO/Entornos de desarrollo/entornos-linting-taskmanager-cliente/src/main/kotlin/utilidades/Logger.kt:1:1</span><span class="message">The package declaration does not match the actual file location.</span>
+        <pre><code><span class="lineno">   1 </span><span class="error">package es.prog2425.taskmanager.utilidades</span>
+<span class="lineno">   2 </span>
+<span class="lineno">   3 </span>import org.slf4j.LoggerFactory
+<span class="lineno">   4 </span>
+</code></pre>
+      </li>
+      <li><span class="location">D:/ezequiel/INSTITUTO/Entornos de desarrollo/entornos-linting-taskmanager-cliente/src/main/kotlin/utilidades/Utils.kt:1:1</span><span class="message">The package declaration does not match the actual file location.</span>
+        <pre><code><span class="lineno">   1 </span><span class="error">package es.prog2425.taskmanager.utilidades</span>
+<span class="lineno">   2 </span>
+<span class="lineno">   3 </span>import java.time.LocalDate
+<span class="lineno">   4 </span>import java.time.format.DateTimeFormatter
+</code></pre>
+      </li>
+      <li><span class="location">D:/ezequiel/INSTITUTO/Entornos de desarrollo/entornos-linting-taskmanager-cliente/src/test/kotlin/ActividadServiceTest.kt:1:1</span><span class="message">The package declaration does not match the actual file location.</span>
+        <pre><code><span class="lineno">   1 </span><span class="error">package es.prog2425.taskmanager.aplicacion</span>
+<span class="lineno">   2 </span>
+<span class="lineno">   3 </span>import es.prog2425.taskmanager.datos.IActividadRepository
+<span class="lineno">   4 </span>import es.prog2425.taskmanager.datos.UserRepository
+</code></pre>
+      </li>
+    </ul>
+  </details>
+  <details id="MemberNameEqualsClassName" open="open">
+    <summary class="rule-container"><span class="rule">MemberNameEqualsClassName: 1 </span><span class="description">A member should not be given the same name as its parent class or object.</span></summary>
+<a href="https://detekt.dev/docs/rules/naming#membernameequalsclassname">Documentation</a>
+    <ul>
+      <li><span class="location">D:/ezequiel/INSTITUTO/Entornos de desarrollo/entornos-linting-taskmanager-cliente/src/main/kotlin/utilidades/Logger.kt:6:5</span><span class="message">A member is named after the object. This might result in confusion. Please rename the member.</span>
+        <pre><code><span class="lineno">   3 </span>import org.slf4j.LoggerFactory
+<span class="lineno">   4 </span>
+<span class="lineno">   5 </span>object Logger {
+<span class="lineno">   6 </span>    <span class="error">private val logger = LoggerFactory.getLogger(&quot;TaskManager&quot;)</span>
+<span class="lineno">   7 </span>
+<span class="lineno">   8 </span>    fun info(mensaje: String) {
+<span class="lineno">   9 </span>        logger.info(mensaje)
+</code></pre>
+      </li>
+    </ul>
+  </details>
+  <h3>style: 52</h3>
+  <details id="MagicNumber" open="open">
+    <summary class="rule-container"><span class="rule">MagicNumber: 26 </span><span class="description">Report magic numbers. Magic number is a numeric literal that is not defined as a constant and hence it's unclear what the purpose of this number is. It's better to declare such numbers as constants and give them a proper name. By default, -1, 0, 1, and 2 are not considered to be magic numbers.</span></summary>
+<a href="https://detekt.dev/docs/rules/style#magicnumber">Documentation</a>
+    <ul>
+      <li><span class="location">D:/ezequiel/INSTITUTO/Entornos de desarrollo/entornos-linting-taskmanager-cliente/src/main/kotlin/aplicacion/ActividadService.kt:25:95</span><span class="message">This expression contains a magic number. Consider defining it to a well named constant.</span>
+        <pre><code><span class="lineno">  22 </span>
+<span class="lineno">  23 </span>            val tarea = Tarea.creaInstancia(descripcion, null, etiquetas)
+<span class="lineno">  24 </span>            repositorio.agregar(tarea)
+<span class="lineno">  25 </span>            Logger.info(&quot;Tarea creada exitosamente | ID:${tarea.id} | Desc:${descripcion.take(<span class="error">15</span>)}...&quot;)
+<span class="lineno">  26 </span>        } catch (e: Exception) {
+<span class="lineno">  27 </span>            Logger.error(&quot;Fallo creación tarea: ${e.message} | Stacktrace:&quot;, e)
+<span class="lineno">  28 </span>            throw e
+</code></pre>
+      </li>
+      <li><span class="location">D:/ezequiel/INSTITUTO/Entornos de desarrollo/entornos-linting-taskmanager-cliente/src/main/kotlin/aplicacion/ActividadService.kt:133:13</span><span class="message">This expression contains a magic number. Consider defining it to a well named constant.</span>
+        <pre><code><span class="lineno"> 130 </span>
+<span class="lineno"> 131 </span>        val estado = when (opcionElegida) {
+<span class="lineno"> 132 </span>            1 -&gt; Estado.ABIERTA
+<span class="lineno"> 133 </span>            <span class="error">2</span> -&gt; Estado.EN_PROGRESO
+<span class="lineno"> 134 </span>            3 -&gt; {
+<span class="lineno"> 135 </span>                if (!tarea.puedeCerrarse()) {
+<span class="lineno"> 136 </span>                    Logger.error(&quot;Intento de cerrar tarea $tareaId con subtareas pendientes&quot;)
+</code></pre>
+      </li>
+      <li><span class="location">D:/ezequiel/INSTITUTO/Entornos de desarrollo/entornos-linting-taskmanager-cliente/src/main/kotlin/aplicacion/ActividadService.kt:134:13</span><span class="message">This expression contains a magic number. Consider defining it to a well named constant.</span>
+        <pre><code><span class="lineno"> 131 </span>        val estado = when (opcionElegida) {
+<span class="lineno"> 132 </span>            1 -&gt; Estado.ABIERTA
+<span class="lineno"> 133 </span>            2 -&gt; Estado.EN_PROGRESO
+<span class="lineno"> 134 </span>            <span class="error">3</span> -&gt; {
+<span class="lineno"> 135 </span>                if (!tarea.puedeCerrarse()) {
+<span class="lineno"> 136 </span>                    Logger.error(&quot;Intento de cerrar tarea $tareaId con subtareas pendientes&quot;)
+<span class="lineno"> 137 </span>                    throw IllegalStateException(&quot;Subtareas pendientes | Tarea:$tareaId&quot;)
+</code></pre>
+      </li>
+      <li><span class="location">D:/ezequiel/INSTITUTO/Entornos de desarrollo/entornos-linting-taskmanager-cliente/src/main/kotlin/presentacion/ConsolaUI.kt:22:21</span><span class="message">This expression contains a magic number. Consider defining it to a well named constant.</span>
+        <pre><code><span class="lineno">  19 </span>                Logger.debug(&quot;Opción seleccionada: $opcion&quot;)
+<span class="lineno">  20 </span>                when (opcion) {
+<span class="lineno">  21 </span>                    1 -&gt; gestionUsuarios()
+<span class="lineno">  22 </span>                    <span class="error">2</span> -&gt; gestionActividades()
+<span class="lineno">  23 </span>                    3 -&gt; mostrarDashboard()
+<span class="lineno">  24 </span>                    4 -&gt; println(&quot;[+] ¡Hasta luego!&quot;)
+<span class="lineno">  25 </span>                    else -&gt; println(&quot;[-] Opción no válida&quot;)
+</code></pre>
+      </li>
+      <li><span class="location">D:/ezequiel/INSTITUTO/Entornos de desarrollo/entornos-linting-taskmanager-cliente/src/main/kotlin/presentacion/ConsolaUI.kt:23:21</span><span class="message">This expression contains a magic number. Consider defining it to a well named constant.</span>
+        <pre><code><span class="lineno">  20 </span>                when (opcion) {
+<span class="lineno">  21 </span>                    1 -&gt; gestionUsuarios()
+<span class="lineno">  22 </span>                    2 -&gt; gestionActividades()
+<span class="lineno">  23 </span>                    <span class="error">3</span> -&gt; mostrarDashboard()
+<span class="lineno">  24 </span>                    4 -&gt; println(&quot;[+] ¡Hasta luego!&quot;)
+<span class="lineno">  25 </span>                    else -&gt; println(&quot;[-] Opción no válida&quot;)
+<span class="lineno">  26 </span>                }
+</code></pre>
+      </li>
+      <li><span class="location">D:/ezequiel/INSTITUTO/Entornos de desarrollo/entornos-linting-taskmanager-cliente/src/main/kotlin/presentacion/ConsolaUI.kt:24:21</span><span class="message">This expression contains a magic number. Consider defining it to a well named constant.</span>
+        <pre><code><span class="lineno">  21 </span>                    1 -&gt; gestionUsuarios()
+<span class="lineno">  22 </span>                    2 -&gt; gestionActividades()
+<span class="lineno">  23 </span>                    3 -&gt; mostrarDashboard()
+<span class="lineno">  24 </span>                    <span class="error">4</span> -&gt; println(&quot;[+] ¡Hasta luego!&quot;)
+<span class="lineno">  25 </span>                    else -&gt; println(&quot;[-] Opción no válida&quot;)
+<span class="lineno">  26 </span>                }
+<span class="lineno">  27 </span>                if (opcion != 4) {
+</code></pre>
+      </li>
+      <li><span class="location">D:/ezequiel/INSTITUTO/Entornos de desarrollo/entornos-linting-taskmanager-cliente/src/main/kotlin/presentacion/ConsolaUI.kt:27:31</span><span class="message">This expression contains a magic number. Consider defining it to a well named constant.</span>
+        <pre><code><span class="lineno">  24 </span>                    4 -&gt; println(&quot;[+] ¡Hasta luego!&quot;)
+<span class="lineno">  25 </span>                    else -&gt; println(&quot;[-] Opción no válida&quot;)
+<span class="lineno">  26 </span>                }
+<span class="lineno">  27 </span>                if (opcion != <span class="error">4</span>) {
+<span class="lineno">  28 </span>                    print(&quot;[+] Presiona ENTER para continuar...&quot;)
+<span class="lineno">  29 </span>                    readln()
+<span class="lineno">  30 </span>                }
+</code></pre>
+      </li>
+      <li><span class="location">D:/ezequiel/INSTITUTO/Entornos de desarrollo/entornos-linting-taskmanager-cliente/src/main/kotlin/presentacion/ConsolaUI.kt:34:28</span><span class="message">This expression contains a magic number. Consider defining it to a well named constant.</span>
+        <pre><code><span class="lineno">  31 </span>            } catch (e: Exception) {
+<span class="lineno">  32 </span>                Logger.error(&quot;Error en flujo principal: ${e.javaClass.simpleName} - ${e.message}&quot;)
+<span class="lineno">  33 </span>            }
+<span class="lineno">  34 </span>        } while (opcion != <span class="error">4</span>)
+<span class="lineno">  35 </span>        Logger.info(&quot;Aplicación finalizada correctamente&quot;)
+<span class="lineno">  36 </span>    }
+<span class="lineno">  37 </span>
+</code></pre>
+      </li>
+      <li><span class="location">D:/ezequiel/INSTITUTO/Entornos de desarrollo/entornos-linting-taskmanager-cliente/src/main/kotlin/presentacion/ConsolaUI.kt:67:17</span><span class="message">This expression contains a magic number. Consider defining it to a well named constant.</span>
+        <pre><code><span class="lineno">  64 </span>            opcion = leerOpcion()
+<span class="lineno">  65 </span>            when (opcion) {
+<span class="lineno">  66 </span>                1 -&gt; crearUsuario()
+<span class="lineno">  67 </span>                <span class="error">2</span> -&gt; listarUsuarios()
+<span class="lineno">  68 </span>                3 -&gt; asignarTareaAUsuario()
+<span class="lineno">  69 </span>                4 -&gt; verTareasUsuario()
+<span class="lineno">  70 </span>                5 -&gt; return
+</code></pre>
+      </li>
+      <li><span class="location">D:/ezequiel/INSTITUTO/Entornos de desarrollo/entornos-linting-taskmanager-cliente/src/main/kotlin/presentacion/ConsolaUI.kt:68:17</span><span class="message">This expression contains a magic number. Consider defining it to a well named constant.</span>
+        <pre><code><span class="lineno">  65 </span>            when (opcion) {
+<span class="lineno">  66 </span>                1 -&gt; crearUsuario()
+<span class="lineno">  67 </span>                2 -&gt; listarUsuarios()
+<span class="lineno">  68 </span>                <span class="error">3</span> -&gt; asignarTareaAUsuario()
+<span class="lineno">  69 </span>                4 -&gt; verTareasUsuario()
+<span class="lineno">  70 </span>                5 -&gt; return
+<span class="lineno">  71 </span>                else -&gt; println(&quot;[-] Opción no válida&quot;)
+</code></pre>
+      </li>
+      <li><span class="location">D:/ezequiel/INSTITUTO/Entornos de desarrollo/entornos-linting-taskmanager-cliente/src/main/kotlin/presentacion/ConsolaUI.kt:69:17</span><span class="message">This expression contains a magic number. Consider defining it to a well named constant.</span>
+        <pre><code><span class="lineno">  66 </span>                1 -&gt; crearUsuario()
+<span class="lineno">  67 </span>                2 -&gt; listarUsuarios()
+<span class="lineno">  68 </span>                3 -&gt; asignarTareaAUsuario()
+<span class="lineno">  69 </span>                <span class="error">4</span> -&gt; verTareasUsuario()
+<span class="lineno">  70 </span>                5 -&gt; return
+<span class="lineno">  71 </span>                else -&gt; println(&quot;[-] Opción no válida&quot;)
+<span class="lineno">  72 </span>            }
+</code></pre>
+      </li>
+      <li><span class="location">D:/ezequiel/INSTITUTO/Entornos de desarrollo/entornos-linting-taskmanager-cliente/src/main/kotlin/presentacion/ConsolaUI.kt:70:17</span><span class="message">This expression contains a magic number. Consider defining it to a well named constant.</span>
+        <pre><code><span class="lineno">  67 </span>                2 -&gt; listarUsuarios()
+<span class="lineno">  68 </span>                3 -&gt; asignarTareaAUsuario()
+<span class="lineno">  69 </span>                4 -&gt; verTareasUsuario()
+<span class="lineno">  70 </span>                <span class="error">5</span> -&gt; return
+<span class="lineno">  71 </span>                else -&gt; println(&quot;[-] Opción no válida&quot;)
+<span class="lineno">  72 </span>            }
+<span class="lineno">  73 </span>        } while (opcion != 5)
+</code></pre>
+      </li>
+      <li><span class="location">D:/ezequiel/INSTITUTO/Entornos de desarrollo/entornos-linting-taskmanager-cliente/src/main/kotlin/presentacion/ConsolaUI.kt:73:28</span><span class="message">This expression contains a magic number. Consider defining it to a well named constant.</span>
+        <pre><code><span class="lineno">  70 </span>                5 -&gt; return
+<span class="lineno">  71 </span>                else -&gt; println(&quot;[-] Opción no válida&quot;)
+<span class="lineno">  72 </span>            }
+<span class="lineno">  73 </span>        } while (opcion != <span class="error">5</span>)
+<span class="lineno">  74 </span>    }
+<span class="lineno">  75 </span>
+<span class="lineno">  76 </span>    private fun crearUsuario() {
+</code></pre>
+      </li>
+      <li><span class="location">D:/ezequiel/INSTITUTO/Entornos de desarrollo/entornos-linting-taskmanager-cliente/src/main/kotlin/presentacion/ConsolaUI.kt:161:17</span><span class="message">This expression contains a magic number. Consider defining it to a well named constant.</span>
+        <pre><code><span class="lineno"> 158 </span>            opcion = leerOpcion()
+<span class="lineno"> 159 </span>            when (opcion) {
+<span class="lineno"> 160 </span>                1 -&gt; crearActividad()
+<span class="lineno"> 161 </span>                <span class="error">2</span> -&gt; listarActividades()
+<span class="lineno"> 162 </span>                3 -&gt; filtrarActividades()
+<span class="lineno"> 163 </span>                4 -&gt; gestionarSubtareas()
+<span class="lineno"> 164 </span>                5 -&gt; cambiarEstadoTarea()
+</code></pre>
+      </li>
+      <li><span class="location">D:/ezequiel/INSTITUTO/Entornos de desarrollo/entornos-linting-taskmanager-cliente/src/main/kotlin/presentacion/ConsolaUI.kt:162:17</span><span class="message">This expression contains a magic number. Consider defining it to a well named constant.</span>
+        <pre><code><span class="lineno"> 159 </span>            when (opcion) {
+<span class="lineno"> 160 </span>                1 -&gt; crearActividad()
+<span class="lineno"> 161 </span>                2 -&gt; listarActividades()
+<span class="lineno"> 162 </span>                <span class="error">3</span> -&gt; filtrarActividades()
+<span class="lineno"> 163 </span>                4 -&gt; gestionarSubtareas()
+<span class="lineno"> 164 </span>                5 -&gt; cambiarEstadoTarea()
+<span class="lineno"> 165 </span>                6 -&gt; return
+</code></pre>
+      </li>
+      <li><span class="location">D:/ezequiel/INSTITUTO/Entornos de desarrollo/entornos-linting-taskmanager-cliente/src/main/kotlin/presentacion/ConsolaUI.kt:163:17</span><span class="message">This expression contains a magic number. Consider defining it to a well named constant.</span>
+        <pre><code><span class="lineno"> 160 </span>                1 -&gt; crearActividad()
+<span class="lineno"> 161 </span>                2 -&gt; listarActividades()
+<span class="lineno"> 162 </span>                3 -&gt; filtrarActividades()
+<span class="lineno"> 163 </span>                <span class="error">4</span> -&gt; gestionarSubtareas()
+<span class="lineno"> 164 </span>                5 -&gt; cambiarEstadoTarea()
+<span class="lineno"> 165 </span>                6 -&gt; return
+<span class="lineno"> 166 </span>                else -&gt; println(&quot;[-] Opción no válida&quot;)
+</code></pre>
+      </li>
+      <li><span class="location">D:/ezequiel/INSTITUTO/Entornos de desarrollo/entornos-linting-taskmanager-cliente/src/main/kotlin/presentacion/ConsolaUI.kt:164:17</span><span class="message">This expression contains a magic number. Consider defining it to a well named constant.</span>
+        <pre><code><span class="lineno"> 161 </span>                2 -&gt; listarActividades()
+<span class="lineno"> 162 </span>                3 -&gt; filtrarActividades()
+<span class="lineno"> 163 </span>                4 -&gt; gestionarSubtareas()
+<span class="lineno"> 164 </span>                <span class="error">5</span> -&gt; cambiarEstadoTarea()
+<span class="lineno"> 165 </span>                6 -&gt; return
+<span class="lineno"> 166 </span>                else -&gt; println(&quot;[-] Opción no válida&quot;)
+<span class="lineno"> 167 </span>            }
+</code></pre>
+      </li>
+      <li><span class="location">D:/ezequiel/INSTITUTO/Entornos de desarrollo/entornos-linting-taskmanager-cliente/src/main/kotlin/presentacion/ConsolaUI.kt:165:17</span><span class="message">This expression contains a magic number. Consider defining it to a well named constant.</span>
+        <pre><code><span class="lineno"> 162 </span>                3 -&gt; filtrarActividades()
+<span class="lineno"> 163 </span>                4 -&gt; gestionarSubtareas()
+<span class="lineno"> 164 </span>                5 -&gt; cambiarEstadoTarea()
+<span class="lineno"> 165 </span>                <span class="error">6</span> -&gt; return
+<span class="lineno"> 166 </span>                else -&gt; println(&quot;[-] Opción no válida&quot;)
+<span class="lineno"> 167 </span>            }
+<span class="lineno"> 168 </span>        } while (opcion != 6)
+</code></pre>
+      </li>
+      <li><span class="location">D:/ezequiel/INSTITUTO/Entornos de desarrollo/entornos-linting-taskmanager-cliente/src/main/kotlin/presentacion/ConsolaUI.kt:168:28</span><span class="message">This expression contains a magic number. Consider defining it to a well named constant.</span>
+        <pre><code><span class="lineno"> 165 </span>                6 -&gt; return
+<span class="lineno"> 166 </span>                else -&gt; println(&quot;[-] Opción no válida&quot;)
+<span class="lineno"> 167 </span>            }
+<span class="lineno"> 168 </span>        } while (opcion != <span class="error">6</span>)
+<span class="lineno"> 169 </span>    }
+<span class="lineno"> 170 </span>
+<span class="lineno"> 171 </span>    private fun crearActividad() {
+</code></pre>
+      </li>
+      <li><span class="location">D:/ezequiel/INSTITUTO/Entornos de desarrollo/entornos-linting-taskmanager-cliente/src/main/kotlin/presentacion/ConsolaUI.kt:181:13</span><span class="message">This expression contains a magic number. Consider defining it to a well named constant.</span>
+        <pre><code><span class="lineno"> 178 </span>
+<span class="lineno"> 179 </span>        when (leerOpcion()) {
+<span class="lineno"> 180 </span>            1 -&gt; crearTarea()
+<span class="lineno"> 181 </span>            <span class="error">2</span> -&gt; crearEvento()
+<span class="lineno"> 182 </span>            else -&gt; println(&quot;[-] Opción incorrecta&quot;)
+<span class="lineno"> 183 </span>        }
+<span class="lineno"> 184 </span>    }
+</code></pre>
+      </li>
+      <li><span class="location">D:/ezequiel/INSTITUTO/Entornos de desarrollo/entornos-linting-taskmanager-cliente/src/main/kotlin/presentacion/ConsolaUI.kt:239:13</span><span class="message">This expression contains a magic number. Consider defining it to a well named constant.</span>
+        <pre><code><span class="lineno"> 236 </span>
+<span class="lineno"> 237 </span>        when (leerOpcion()) {
+<span class="lineno"> 238 </span>            1 -&gt; filtrarPorTipo()
+<span class="lineno"> 239 </span>            <span class="error">2</span> -&gt; filtrarPorEstado()
+<span class="lineno"> 240 </span>            3 -&gt; filtrarPorEtiqueta()
+<span class="lineno"> 241 </span>            4 -&gt; filtrarPorUsuario()
+<span class="lineno"> 242 </span>            5 -&gt; filtrarPorFecha()
+</code></pre>
+      </li>
+      <li><span class="location">D:/ezequiel/INSTITUTO/Entornos de desarrollo/entornos-linting-taskmanager-cliente/src/main/kotlin/presentacion/ConsolaUI.kt:240:13</span><span class="message">This expression contains a magic number. Consider defining it to a well named constant.</span>
+        <pre><code><span class="lineno"> 237 </span>        when (leerOpcion()) {
+<span class="lineno"> 238 </span>            1 -&gt; filtrarPorTipo()
+<span class="lineno"> 239 </span>            2 -&gt; filtrarPorEstado()
+<span class="lineno"> 240 </span>            <span class="error">3</span> -&gt; filtrarPorEtiqueta()
+<span class="lineno"> 241 </span>            4 -&gt; filtrarPorUsuario()
+<span class="lineno"> 242 </span>            5 -&gt; filtrarPorFecha()
+<span class="lineno"> 243 </span>
+</code></pre>
+      </li>
+      <li><span class="location">D:/ezequiel/INSTITUTO/Entornos de desarrollo/entornos-linting-taskmanager-cliente/src/main/kotlin/presentacion/ConsolaUI.kt:241:13</span><span class="message">This expression contains a magic number. Consider defining it to a well named constant.</span>
+        <pre><code><span class="lineno"> 238 </span>            1 -&gt; filtrarPorTipo()
+<span class="lineno"> 239 </span>            2 -&gt; filtrarPorEstado()
+<span class="lineno"> 240 </span>            3 -&gt; filtrarPorEtiqueta()
+<span class="lineno"> 241 </span>            <span class="error">4</span> -&gt; filtrarPorUsuario()
+<span class="lineno"> 242 </span>            5 -&gt; filtrarPorFecha()
+<span class="lineno"> 243 </span>
+<span class="lineno"> 244 </span>            else -&gt; println(&quot;[-] Opción incorrecta&quot;)
+</code></pre>
+      </li>
+      <li><span class="location">D:/ezequiel/INSTITUTO/Entornos de desarrollo/entornos-linting-taskmanager-cliente/src/main/kotlin/presentacion/ConsolaUI.kt:242:13</span><span class="message">This expression contains a magic number. Consider defining it to a well named constant.</span>
+        <pre><code><span class="lineno"> 239 </span>            2 -&gt; filtrarPorEstado()
+<span class="lineno"> 240 </span>            3 -&gt; filtrarPorEtiqueta()
+<span class="lineno"> 241 </span>            4 -&gt; filtrarPorUsuario()
+<span class="lineno"> 242 </span>            <span class="error">5</span> -&gt; filtrarPorFecha()
+<span class="lineno"> 243 </span>
+<span class="lineno"> 244 </span>            else -&gt; println(&quot;[-] Opción incorrecta&quot;)
+<span class="lineno"> 245 </span>        }
+</code></pre>
+      </li>
+      <li><span class="location">D:/ezequiel/INSTITUTO/Entornos de desarrollo/entornos-linting-taskmanager-cliente/src/main/kotlin/presentacion/ConsolaUI.kt:400:73</span><span class="message">This expression contains a magic number. Consider defining it to a well named constant.</span>
+        <pre><code><span class="lineno"> 397 </span>
+<span class="lineno"> 398 </span>            historial.forEach { registro -&gt;
+<span class="lineno"> 399 </span>                println(&quot;├──────────┼──────────┼────────────────┤&quot;)
+<span class="lineno"> 400 </span>                println(&quot;│ ${registro.fecha} │ ${registro.accion.padEnd(<span class="error">8</span>)} │ ${registro.detalle.padEnd(14)} │&quot;)
+<span class="lineno"> 401 </span>            }
+<span class="lineno"> 402 </span>
+<span class="lineno"> 403 </span>            println(&quot;└──────────┴──────────┴────────────────┘&quot;)
+</code></pre>
+      </li>
+      <li><span class="location">D:/ezequiel/INSTITUTO/Entornos de desarrollo/entornos-linting-taskmanager-cliente/src/main/kotlin/presentacion/ConsolaUI.kt:400:105</span><span class="message">This expression contains a magic number. Consider defining it to a well named constant.</span>
+        <pre><code><span class="lineno"> 397 </span>
+<span class="lineno"> 398 </span>            historial.forEach { registro -&gt;
+<span class="lineno"> 399 </span>                println(&quot;├──────────┼──────────┼────────────────┤&quot;)
+<span class="lineno"> 400 </span>                println(&quot;│ ${registro.fecha} │ ${registro.accion.padEnd(8)} │ ${registro.detalle.padEnd(<span class="error">14</span>)} │&quot;)
+<span class="lineno"> 401 </span>            }
+<span class="lineno"> 402 </span>
+<span class="lineno"> 403 </span>            println(&quot;└──────────┴──────────┴────────────────┘&quot;)
+</code></pre>
+      </li>
+    </ul>
+  </details>
+  <details id="MaxLineLength" open="open">
+    <summary class="rule-container"><span class="rule">MaxLineLength: 8 </span><span class="description">Line detected, which is longer than the defined maximum line length in the code style.</span></summary>
+<a href="https://detekt.dev/docs/rules/style#maxlinelength">Documentation</a>
+    <ul>
+      <li><span class="location">D:/ezequiel/INSTITUTO/Entornos de desarrollo/entornos-linting-taskmanager-cliente/src/main/kotlin/Main.kt:21:1</span><span class="message">Line detected, which is longer than the defined maximum line length in the code style.</span>
+        <pre><code><span class="lineno">  18 </span>    try {
+<span class="lineno">  19 </span>        val actividadRepo = ActividadRepositoryMemoria()
+<span class="lineno">  20 </span>        val userRepo = UserRepositoryMemoria()
+<span class="lineno">  21 </span><span class="error">        Logger.debug(&quot;Repositorios inicializados: Actividades[${actividadRepo.listar().size}] | Usuarios[${userRepo.listar().size}]&quot;)</span>
+<span class="lineno">  22 </span>
+<span class="lineno">  23 </span>        val servicio = ActividadService(actividadRepo, userRepo)
+<span class="lineno">  24 </span>        val consola = ConsolaUI(servicio)
+</code></pre>
+      </li>
+      <li><span class="location">D:/ezequiel/INSTITUTO/Entornos de desarrollo/entornos-linting-taskmanager-cliente/src/main/kotlin/dominio/Evento.kt:38:1</span><span class="message">Line detected, which is longer than the defined maximum line length in the code style.</span>
+        <pre><code><span class="lineno">  35 </span>    }
+<span class="lineno">  36 </span>
+<span class="lineno">  37 </span>    companion object {
+<span class="lineno">  38 </span><span class="error">        fun creaInstancia(descripcion: String, fecha: String, ubicacion: String, etiquetas: List&lt;String&gt; = emptyList()): Evento {</span>
+<span class="lineno">  39 </span>            val fechaActual = Utils.obtenerFechaActual()
+<span class="lineno">  40 </span>            return Evento(
+<span class="lineno">  41 </span>                Actividad.generarId(fechaActual),
+</code></pre>
+      </li>
+      <li><span class="location">D:/ezequiel/INSTITUTO/Entornos de desarrollo/entornos-linting-taskmanager-cliente/src/main/kotlin/dominio/Tarea.kt:37:1</span><span class="message">Line detected, which is longer than the defined maximum line length in the code style.</span>
+        <pre><code><span class="lineno">  34 </span>            else -&gt; &quot;❌&quot;
+<span class="lineno">  35 </span>        }
+<span class="lineno">  36 </span>        val asignadoStr = asignadoA?.let { &quot; 👤${it.nombre}&quot; } ?: &quot;&quot;
+<span class="lineno">  37 </span><span class="error">        val subtareasStr = if (subtareas.isNotEmpty()) &quot;\n  └ Subtareas: ${subtareas.joinToString { &quot;#${it.id}&quot; }}&quot; else &quot;&quot;</span>
+<span class="lineno">  38 </span>        val etiquetasStr = if (etiquetas.isNotEmpty()) &quot; 🏷️[${etiquetas.joinToString()}]&quot; else &quot;&quot;
+<span class="lineno">  39 </span>        return &quot;Tarea #$id$detallePadre: $descripcion $estadoStr$asignadoStr$etiquetasStr$subtareasStr&quot;
+<span class="lineno">  40 </span>    }
+</code></pre>
+      </li>
+      <li><span class="location">D:/ezequiel/INSTITUTO/Entornos de desarrollo/entornos-linting-taskmanager-cliente/src/main/kotlin/presentacion/ConsolaUI.kt:261:1</span><span class="message">Line detected, which is longer than the defined maximum line length in the code style.</span>
+        <pre><code><span class="lineno"> 258 </span>        print(&quot;[+] Introduce la etiqueta a filtrar: &quot;)
+<span class="lineno"> 259 </span>        val etiqueta = readln().trim().lowercase()
+<span class="lineno"> 260 </span>        val actividades = servicio.filtrarPorEtiqueta(etiqueta)
+<span class="lineno"> 261 </span><span class="error">        if (comprobarListaVacia(actividades, &quot;No se han encontrado actividades con '$etiqueta'&quot;, &quot;\n[!] No hay actividades con esa etiqueta&quot;)) return</span>
+<span class="lineno"> 262 </span>        println(&quot;\n── LISTADO DE ACTIVIDADES ──&quot;)
+<span class="lineno"> 263 </span>        actividades.forEach { println(it.obtenerDetalle()) }
+<span class="lineno"> 264 </span>    }
+</code></pre>
+      </li>
+      <li><span class="location">D:/ezequiel/INSTITUTO/Entornos de desarrollo/entornos-linting-taskmanager-cliente/src/main/kotlin/presentacion/ConsolaUI.kt:272:1</span><span class="message">Line detected, which is longer than the defined maximum line length in the code style.</span>
+        <pre><code><span class="lineno"> 269 </span>        var estado: Estado? = null
+<span class="lineno"> 270 </span>        Estado.entries.forEach { if (it.name.lowercase() == resp) estado = it }
+<span class="lineno"> 271 </span>        val actividades = if (estado != null) servicio.filtrarPorEstado(estado!!) else listOf()
+<span class="lineno"> 272 </span><span class="error">        if (comprobarListaVacia(actividades, &quot;No se han encontrado actividades con estado '$estado'&quot;, &quot;\n[!] No hay actividades con ese estado&quot;)) return</span>
+<span class="lineno"> 273 </span>        println(&quot;\n── LISTADO DE ACTIVIDADES ──&quot;)
+<span class="lineno"> 274 </span>        actividades.forEach { println(it.obtenerDetalle()) }
+<span class="lineno"> 275 </span>    }
+</code></pre>
+      </li>
+      <li><span class="location">D:/ezequiel/INSTITUTO/Entornos de desarrollo/entornos-linting-taskmanager-cliente/src/main/kotlin/presentacion/ConsolaUI.kt:281:1</span><span class="message">Line detected, which is longer than the defined maximum line length in the code style.</span>
+        <pre><code><span class="lineno"> 278 </span>        print(&quot;[+] Introduce el tipo a filtrar: &quot;)
+<span class="lineno"> 279 </span>        val tipo = readln().trim().lowercase()
+<span class="lineno"> 280 </span>        val actividades = servicio.filtrarPorTipo(tipo)
+<span class="lineno"> 281 </span><span class="error">        if (comprobarListaVacia(actividades, &quot;No se han encontrado actividades con tipo '$tipo'&quot;, &quot;\n[!] No hay actividades con ese tipo&quot;)) return</span>
+<span class="lineno"> 282 </span>        println(&quot;\n── LISTADO DE ACTIVIDADES ──&quot;)
+<span class="lineno"> 283 </span>        actividades.forEach { println(it.obtenerDetalle()) }
+<span class="lineno"> 284 </span>    }
+</code></pre>
+      </li>
+      <li><span class="location">D:/ezequiel/INSTITUTO/Entornos de desarrollo/entornos-linting-taskmanager-cliente/src/main/kotlin/presentacion/ConsolaUI.kt:295:1</span><span class="message">Line detected, which is longer than the defined maximum line length in the code style.</span>
+        <pre><code><span class="lineno"> 292 </span>            return
+<span class="lineno"> 293 </span>        }
+<span class="lineno"> 294 </span>        val actividades = servicio.filtrarPorUsuario(id)
+<span class="lineno"> 295 </span><span class="error">        if (comprobarListaVacia(actividades, &quot;No se han encontrado actividades del usuario con id '$id'&quot;, &quot;\n[!] No hay actividades de ese usuario&quot;)) return</span>
+<span class="lineno"> 296 </span>        println(&quot;\n── LISTADO DE ACTIVIDADES ──&quot;)
+<span class="lineno"> 297 </span>        actividades.forEach { println(it.obtenerDetalle()) }
+<span class="lineno"> 298 </span>    }
+</code></pre>
+      </li>
+      <li><span class="location">D:/ezequiel/INSTITUTO/Entornos de desarrollo/entornos-linting-taskmanager-cliente/src/main/kotlin/presentacion/ConsolaUI.kt:304:1</span><span class="message">Line detected, which is longer than the defined maximum line length in the code style.</span>
+        <pre><code><span class="lineno"> 301 </span>        print(&quot;[+] Introduce la fecha a filtrar: &quot;)
+<span class="lineno"> 302 </span>        val fecha = readln().trim().lowercase()
+<span class="lineno"> 303 </span>        val actividades = servicio.filtrarPorFecha(fecha)
+<span class="lineno"> 304 </span><span class="error">        if (comprobarListaVacia(actividades, &quot;No se han encontrado actividades con fecha '$fecha'&quot;, &quot;\n[!] No hay actividades con esa fecha&quot;)) return</span>
+<span class="lineno"> 305 </span>        println(&quot;\n── LISTADO DE ACTIVIDADES ──&quot;)
+<span class="lineno"> 306 </span>        actividades.forEach { println(it.obtenerDetalle()) }
+<span class="lineno"> 307 </span>    }
+</code></pre>
+      </li>
+    </ul>
+  </details>
+  <details id="NewLineAtEndOfFile" open="open">
+    <summary class="rule-container"><span class="rule">NewLineAtEndOfFile: 10 </span><span class="description">Checks whether files end with a line separator.</span></summary>
+<a href="https://detekt.dev/docs/rules/style#newlineatendoffile">Documentation</a>
+    <ul>
+      <li><span class="location">D:/ezequiel/INSTITUTO/Entornos de desarrollo/entornos-linting-taskmanager-cliente/src/main/kotlin/aplicacion/ResumenEventos.kt:8:2</span><span class="message">The file D:\ezequiel\INSTITUTO\Entornos de desarrollo\entornos-linting-taskmanager-cliente\src\main\kotlin\aplicacion\ResumenEventos.kt is not ending with a new line.</span>
+        <pre><code><span class="lineno">   5 </span>    val manana: Int,
+<span class="lineno">   6 </span>    val estaSemana: Int,
+<span class="lineno">   7 </span>    val esteMes: Int
+<span class="lineno">   8 </span>)
+</code></pre>
+      </li>
+      <li><span class="location">D:/ezequiel/INSTITUTO/Entornos de desarrollo/entornos-linting-taskmanager-cliente/src/main/kotlin/aplicacion/ResumenTareas.kt:9:2</span><span class="message">The file D:\ezequiel\INSTITUTO\Entornos de desarrollo\entornos-linting-taskmanager-cliente\src\main\kotlin\aplicacion\ResumenTareas.kt is not ending with a new line.</span>
+        <pre><code><span class="lineno">   6 </span>    val totalTareas: Int,
+<span class="lineno">   7 </span>    val tareasMadre: Map&lt;Long, Long&gt;,
+<span class="lineno">   8 </span>    val porEstado: Map&lt;Estado, Int&gt;
+<span class="lineno">   9 </span>)
+</code></pre>
+      </li>
+      <li><span class="location">D:/ezequiel/INSTITUTO/Entornos de desarrollo/entornos-linting-taskmanager-cliente/src/main/kotlin/datos/ActividadRepositoryMemoria.kt:36:2</span><span class="message">The file D:\ezequiel\INSTITUTO\Entornos de desarrollo\entornos-linting-taskmanager-cliente\src\main\kotlin\datos\ActividadRepositoryMemoria.kt is not ending with a new line.</span>
+        <pre><code><span class="lineno">  33 </span>            else Logger.debug(&quot;Actividad encontrada: ${it::class.simpleName}&quot;)
+<span class="lineno">  34 </span>        }
+<span class="lineno">  35 </span>    }
+<span class="lineno">  36 </span>}
+</code></pre>
+      </li>
+      <li><span class="location">D:/ezequiel/INSTITUTO/Entornos de desarrollo/entornos-linting-taskmanager-cliente/src/main/kotlin/datos/IActividadRepository.kt:9:2</span><span class="message">The file D:\ezequiel\INSTITUTO\Entornos de desarrollo\entornos-linting-taskmanager-cliente\src\main\kotlin\datos\IActividadRepository.kt is not ending with a new line.</span>
+        <pre><code><span class="lineno">   6 </span>    fun agregar(actividad: Actividad)
+<span class="lineno">   7 </span>    fun listar(): List&lt;Actividad&gt;
+<span class="lineno">   8 </span>    fun buscarPorId(id: Long): Actividad?
+<span class="lineno">   9 </span>}
+</code></pre>
+      </li>
+      <li><span class="location">D:/ezequiel/INSTITUTO/Entornos de desarrollo/entornos-linting-taskmanager-cliente/src/main/kotlin/datos/UserRepository.kt:9:2</span><span class="message">The file D:\ezequiel\INSTITUTO\Entornos de desarrollo\entornos-linting-taskmanager-cliente\src\main\kotlin\datos\UserRepository.kt is not ending with a new line.</span>
+        <pre><code><span class="lineno">   6 </span>    fun agregar(usuario: Usuario)
+<span class="lineno">   7 </span>    fun listar(): List&lt;Usuario&gt;
+<span class="lineno">   8 </span>    fun buscarPorId(id: Int): Usuario?
+<span class="lineno">   9 </span>}
+</code></pre>
+      </li>
+      <li><span class="location">D:/ezequiel/INSTITUTO/Entornos de desarrollo/entornos-linting-taskmanager-cliente/src/main/kotlin/datos/UserRepositoryMemoria.kt:33:2</span><span class="message">The file D:\ezequiel\INSTITUTO\Entornos de desarrollo\entornos-linting-taskmanager-cliente\src\main\kotlin\datos\UserRepositoryMemoria.kt is not ending with a new line.</span>
+        <pre><code><span class="lineno">  30 </span>    override fun buscarPorId(id: Int): Usuario? {
+<span class="lineno">  31 </span>        return usuarios.find { it.id == id }
+<span class="lineno">  32 </span>    }
+<span class="lineno">  33 </span>}
+</code></pre>
+      </li>
+      <li><span class="location">D:/ezequiel/INSTITUTO/Entornos de desarrollo/entornos-linting-taskmanager-cliente/src/main/kotlin/dominio/Estado.kt:3:55</span><span class="message">The file D:\ezequiel\INSTITUTO\Entornos de desarrollo\entornos-linting-taskmanager-cliente\src\main\kotlin\dominio\Estado.kt is not ending with a new line.</span>
+        <pre><code><span class="lineno">   1 </span>package es.prog2425.taskmanager.dominio
+<span class="lineno">   2 </span>
+<span class="lineno">   3 </span>enum class Estado { ABIERTA, FINALIZADA, EN_PROGRESO }
+</code></pre>
+      </li>
+      <li><span class="location">D:/ezequiel/INSTITUTO/Entornos de desarrollo/entornos-linting-taskmanager-cliente/src/main/kotlin/dominio/Usuario.kt:9:2</span><span class="message">The file D:\ezequiel\INSTITUTO\Entornos de desarrollo\entornos-linting-taskmanager-cliente\src\main\kotlin\dominio\Usuario.kt is not ending with a new line.</span>
+        <pre><code><span class="lineno">   6 </span>    val email: String
+<span class="lineno">   7 </span>) {
+<span class="lineno">   8 </span>    override fun toString(): String = &quot;$id - $nombre ($email)&quot;
+<span class="lineno">   9 </span>}
+</code></pre>
+      </li>
+      <li><span class="location">D:/ezequiel/INSTITUTO/Entornos de desarrollo/entornos-linting-taskmanager-cliente/src/main/kotlin/utilidades/Logger.kt:24:2</span><span class="message">The file D:\ezequiel\INSTITUTO\Entornos de desarrollo\entornos-linting-taskmanager-cliente\src\main\kotlin\utilidades\Logger.kt is not ending with a new line.</span>
+        <pre><code><span class="lineno">  21 </span>        logger.debug(mensaje)
+<span class="lineno">  22 </span>    }
+<span class="lineno">  23 </span>
+<span class="lineno">  24 </span>}
+</code></pre>
+      </li>
+      <li><span class="location">D:/ezequiel/INSTITUTO/Entornos de desarrollo/entornos-linting-taskmanager-cliente/src/test/kotlin/ActividadServiceTest.kt:186:3</span><span class="message">The file D:\ezequiel\INSTITUTO\Entornos de desarrollo\entornos-linting-taskmanager-cliente\src\test\kotlin\ActividadServiceTest.kt is not ending with a new line.</span>
+        <pre><code><span class="lineno"> 183 </span>            }
+<span class="lineno"> 184 </span>        }
+<span class="lineno"> 185 </span>    }
+<span class="lineno"> 186 </span>})
+</code></pre>
+      </li>
+    </ul>
+  </details>
+  <details id="ThrowsCount" open="open">
+    <summary class="rule-container"><span class="rule">ThrowsCount: 1 </span><span class="description">Restrict the number of throw statements in methods.</span></summary>
+<a href="https://detekt.dev/docs/rules/style#throwscount">Documentation</a>
+    <ul>
+      <li><span class="location">D:/ezequiel/INSTITUTO/Entornos de desarrollo/entornos-linting-taskmanager-cliente/src/main/kotlin/aplicacion/ActividadService.kt:123:9</span><span class="message">Too many throw statements in the function cambiarEstadoTarea. The maximum number of allowed throw statements is 2.</span>
+        <pre><code><span class="lineno"> 120 </span>        parent.agregarSubtarea(subtarea)
+<span class="lineno"> 121 </span>    }
+<span class="lineno"> 122 </span>
+<span class="lineno"> 123 </span>    fun <span class="error">cambiarEstadoTarea</span>(tareaId: Long, opcionElegida: Int) {
+<span class="lineno"> 124 </span>        Logger.info(&quot;Cambiando estado tarea:$tareaId | Opción:$opcionElegida&quot;)
+<span class="lineno"> 125 </span>
+<span class="lineno"> 126 </span>        val tarea = repositorio.buscarPorId(tareaId) as? Tarea
+</code></pre>
+      </li>
+    </ul>
+  </details>
+  <details id="UnusedPrivateMember" open="open">
+    <summary class="rule-container"><span class="rule">UnusedPrivateMember: 1 </span><span class="description">Private function is unused and should be removed.</span></summary>
+<a href="https://detekt.dev/docs/rules/style#unusedprivatemember">Documentation</a>
+    <ul>
+      <li><span class="location">D:/ezequiel/INSTITUTO/Entornos de desarrollo/entornos-linting-taskmanager-cliente/src/main/kotlin/aplicacion/ActividadService.kt:209:17</span><span class="message">Private function `verificarSubtareas` is unused.</span>
+        <pre><code><span class="lineno"> 206 </span>            .filter { it.asignadoA?.id == usuarioId }
+<span class="lineno"> 207 </span>    }
+<span class="lineno"> 208 </span>
+<span class="lineno"> 209 </span>    private fun <span class="error">verificarSubtareas</span>(tareaId: Long): Estado {
+<span class="lineno"> 210 </span>        val tarea = repositorio.buscarPorId(tareaId) as? Tarea
+<span class="lineno"> 211 </span>            ?: throw IllegalArgumentException(&quot;ID de tarea no válido&quot;)
+<span class="lineno"> 212 </span>        if (!tarea.puedeCerrarse()) throw IllegalStateException(&quot;Subtareas pendientes&quot;)
+</code></pre>
+      </li>
+    </ul>
+  </details>
+  <details id="UnusedPrivateProperty" open="open">
+    <summary class="rule-container"><span class="rule">UnusedPrivateProperty: 1 </span><span class="description">Property is unused and should be removed.</span></summary>
+<a href="https://detekt.dev/docs/rules/style#unusedprivateproperty">Documentation</a>
+    <ul>
+      <li><span class="location">D:/ezequiel/INSTITUTO/Entornos de desarrollo/entornos-linting-taskmanager-cliente/src/main/kotlin/dominio/Actividad.kt:5:17</span><span class="message">Private property `fechaCreacion` is unused.</span>
+        <pre><code><span class="lineno">   2 </span>
+<span class="lineno">   3 </span>abstract class Actividad(
+<span class="lineno">   4 </span>    var id: Long,
+<span class="lineno">   5 </span>    private val <span class="error">fechaCreacion</span>: String,
+<span class="lineno">   6 </span>    val descripcion: String,
+<span class="lineno">   7 </span>    val etiquetas: List&lt;String&gt; = emptyList()
+<span class="lineno">   8 </span>) {
+</code></pre>
+      </li>
+    </ul>
+  </details>
+  <details id="UseCheckOrError" open="open">
+    <summary class="rule-container"><span class="rule">UseCheckOrError: 3 </span><span class="description">Use check() or error() instead of throwing an IllegalStateException.</span></summary>
+<a href="https://detekt.dev/docs/rules/style#usecheckorerror">Documentation</a>
+    <ul>
+      <li><span class="location">D:/ezequiel/INSTITUTO/Entornos de desarrollo/entornos-linting-taskmanager-cliente/src/main/kotlin/aplicacion/ActividadService.kt:137:21</span><span class="message">Use check() or error() instead of throwing an IllegalStateException.</span>
+        <pre><code><span class="lineno"> 134 </span>            3 -&gt; {
+<span class="lineno"> 135 </span>                if (!tarea.puedeCerrarse()) {
+<span class="lineno"> 136 </span>                    Logger.error(&quot;Intento de cerrar tarea $tareaId con subtareas pendientes&quot;)
+<span class="lineno"> 137 </span>                    <span class="error">throw IllegalStateException(&quot;Subtareas pendientes | Tarea:$tareaId&quot;)</span>
+<span class="lineno"> 138 </span>                } else Estado.FINALIZADA
+<span class="lineno"> 139 </span>            }
+<span class="lineno"> 140 </span>            else -&gt; throw IllegalArgumentException(&quot;Opción incorrecta&quot;)
+</code></pre>
+      </li>
+      <li><span class="location">D:/ezequiel/INSTITUTO/Entornos de desarrollo/entornos-linting-taskmanager-cliente/src/main/kotlin/aplicacion/ActividadService.kt:212:37</span><span class="message">Use check() or error() instead of throwing an IllegalStateException.</span>
+        <pre><code><span class="lineno"> 209 </span>    private fun verificarSubtareas(tareaId: Long): Estado {
+<span class="lineno"> 210 </span>        val tarea = repositorio.buscarPorId(tareaId) as? Tarea
+<span class="lineno"> 211 </span>            ?: throw IllegalArgumentException(&quot;ID de tarea no válido&quot;)
+<span class="lineno"> 212 </span>        if (!tarea.puedeCerrarse()) <span class="error">throw IllegalStateException(&quot;Subtareas pendientes&quot;)</span>
+<span class="lineno"> 213 </span>        return Estado.FINALIZADA
+<span class="lineno"> 214 </span>    }
+<span class="lineno"> 215 </span>
+</code></pre>
+      </li>
+      <li><span class="location">D:/ezequiel/INSTITUTO/Entornos de desarrollo/entornos-linting-taskmanager-cliente/src/main/kotlin/dominio/Tarea.kt:51:17</span><span class="message">Use check() or error() instead of throwing an IllegalStateException.</span>
+        <pre><code><span class="lineno">  48 </span>        try {
+<span class="lineno">  49 </span>            if (estado == Estado.FINALIZADA &amp;&amp; !puedeCerrarse()) {
+<span class="lineno">  50 </span>                Logger.error(&quot;Intento de cerrar tarea $id con subtareas pendientes&quot;)
+<span class="lineno">  51 </span>                <span class="error">throw IllegalStateException(&quot;Subtareas no finalizadas&quot;)</span>
+<span class="lineno">  52 </span>            }
+<span class="lineno">  53 </span>
+<span class="lineno">  54 </span>            registrarAccion(&quot;CambioEstado&quot;, &quot;${this.estado} → $estado&quot;)
+</code></pre>
+      </li>
+    </ul>
+  </details>
+  <details id="WildcardImport" open="open">
+    <summary class="rule-container"><span class="rule">WildcardImport: 2 </span><span class="description">Wildcard imports should be replaced with imports using fully qualified class names. Wildcard imports can lead to naming conflicts. A library update can introduce naming clashes with your classes which results in compilation errors.</span></summary>
+<a href="https://detekt.dev/docs/rules/style#wildcardimport">Documentation</a>
+    <ul>
+      <li><span class="location">D:/ezequiel/INSTITUTO/Entornos de desarrollo/entornos-linting-taskmanager-cliente/src/main/kotlin/aplicacion/ActividadService.kt:5:1</span><span class="message">es.prog2425.taskmanager.dominio.* is a wildcard import. Replace it with fully qualified imports.</span>
+        <pre><code><span class="lineno">   2 </span>
+<span class="lineno">   3 </span>import es.prog2425.taskmanager.datos.IActividadRepository
+<span class="lineno">   4 </span>import es.prog2425.taskmanager.datos.UserRepository
+<span class="lineno">   5 </span><span class="error">import es.prog2425.taskmanager.dominio.*</span>
+<span class="lineno">   6 </span>import es.prog2425.taskmanager.utilidades.Logger
+<span class="lineno">   7 </span>import java.time.LocalDate
+<span class="lineno">   8 </span>import java.time.format.DateTimeFormatter
+</code></pre>
+      </li>
+      <li><span class="location">D:/ezequiel/INSTITUTO/Entornos de desarrollo/entornos-linting-taskmanager-cliente/src/test/kotlin/ActividadServiceTest.kt:5:1</span><span class="message">es.prog2425.taskmanager.dominio.* is a wildcard import. Replace it with fully qualified imports.</span>
+        <pre><code><span class="lineno">   2 </span>
+<span class="lineno">   3 </span>import es.prog2425.taskmanager.datos.IActividadRepository
+<span class="lineno">   4 </span>import es.prog2425.taskmanager.datos.UserRepository
+<span class="lineno">   5 </span><span class="error">import es.prog2425.taskmanager.dominio.*</span>
+<span class="lineno">   6 </span>import io.kotest.core.spec.style.DescribeSpec
+<span class="lineno">   7 </span>import io.kotest.matchers.collections.shouldContain
+<span class="lineno">   8 </span>import io.kotest.matchers.maps.shouldContainKey
+</code></pre>
+      </li>
+    </ul>
+  </details>
+</div>
+
+
+generated with <a href="https://detekt.dev/">detekt version 1.23.6</a> on 2025-05-16 13:14:09 UTC.
+
+</body>
+</html>
