@@ -2,7 +2,11 @@ package es.prog2425.taskmanager.aplicacion
 
 import es.prog2425.taskmanager.datos.IActividadRepository
 import es.prog2425.taskmanager.datos.UserRepository
-import es.prog2425.taskmanager.dominio.*
+import es.prog2425.taskmanager.dominio.Actividad
+import es.prog2425.taskmanager.dominio.Tarea
+import es.prog2425.taskmanager.dominio.Evento
+import es.prog2425.taskmanager.dominio.Estado
+import es.prog2425.taskmanager.dominio.Usuario
 import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.matchers.collections.shouldContain
 import io.kotest.matchers.maps.shouldContainKey
