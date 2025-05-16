@@ -9,6 +9,10 @@ import es.prog2425.taskmanager.utilidades.Utils
 
 class ConsolaUI(private val servicio: ActividadService) {
 
+    companion object {
+        private const val OPCION_SALIR = 4
+    }
+
     fun iniciar() {
         Logger.info("Sistema interactivo iniciado")
         var opcion = 0
@@ -24,7 +28,7 @@ class ConsolaUI(private val servicio: ActividadService) {
                     4 -> println("[+] ¡Hasta luego!")
                     else -> println("[-] Opción no válida")
                 }
-                if (opcion != 4) {
+                if (opcion != OPCION_SALIR) {
                     print("[+] Presiona ENTER para continuar...")
                     readln()
                 }
