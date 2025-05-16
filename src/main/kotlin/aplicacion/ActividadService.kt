@@ -206,12 +206,12 @@ class ActividadService(
             .filter { it.asignadoA?.id == usuarioId }
     }
 
-    private fun verificarSubtareas(tareaId: Long): Estado {
+    /*private fun verificarSubtareas(tareaId: Long): Estado {
         val tarea = repositorio.buscarPorId(tareaId) as? Tarea
             ?: throw IllegalArgumentException("ID de tarea no válido")
         if (!tarea.puedeCerrarse()) throw IllegalStateException("Subtareas pendientes")
         return Estado.FINALIZADA
-    }
+    }*/
 
     fun buscarActividad(id: Long): Actividad? = repositorio.buscarPorId(id)
 }
