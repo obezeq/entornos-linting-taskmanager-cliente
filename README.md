@@ -1,132 +1,138 @@
-# Prácticas de Entornos - Pruebas Unitarias en ActividadService
+# Práctica: Analizadores de Código Estático (Detekt)
+**Rama:** `master`
 
-## 1. Selección del Servicio
-He elegido testear el **`ActividadService`** porque:
-- Es el núcleo de la lógica de negocio del gestor de tareas
-- Depende de 2 repositorios (`IActividadRepository` y `UserRepository`)
-- Tiene 12 métodos públicos complejos que necesitan verificación
+---
 
+## 1. Instalación y Configuración de Detekt
+
+### Proceso de Instalación
+1. **Instalación plugin (IDE)**: me instale el plugin de `Detekt` desde el panel de plugins de IntelliJ IDEA Ultimate.
+2. **Añadí el plugin** en el archivo de configuracion de gradle `build.gradle.kts`:
+   ```kotlin
+   plugins {
+       id("io.gitlab.arturbosch.detekt") version "1.23.6"
+   }
+   ```
+3. **Añadi configuraciones Detekt** en el archivo de configuración de gradle `build.gradle.kts` segun mis preferencias:
+    ```kotlin
+   detekt {
+        toolVersion = "1.23.6"
+        config.setFrom(files("config/detekt.yml"))
+        buildUponDefaultConfig = true
+    }
+    
+    tasks.withType<io.gitlab.arturbosch.detekt.Detekt>().configureEach {
+        reports {
+            html.required.set(true)
+            xml.required.set(false)
+        }
+    }
+    ```
+4. **Configuré las reglas** en `config/detekt.yml`, ajustando la configuración para adaptarlas al proyecto segun las necesidades.
+5. **Ejecuté el análisis** con `./gradlew detekt`. A continuación incluiré capturas de pantalla y explicaré el proceso para realizar un análisis de ejecución.
+
+---
+
+## 2. Errores Detectados y Soluciones
+
+| # | Error                | Archivo               | Descripción                                                                 | Solución                                                                 | Commit                   |
+|---|----------------------|-----------------------|-----------------------------------------------------------------------------|--------------------------------------------------------------------------|--------------------------|
+| 1 | MagicNumber          | ConsolaUI.kt (línea 22) | Uso del número `4` sin constante.                                          | Creé `const val OPCION_SALIR = 4`                                        | [b7e9437](https://github.com/obezeq/entornos-linting-taskmanager-cliente/commit/b7e943780c7014240183f1ad578f89f3b38f3d14) |
+| 2 | NewLineAtEndOfFile   | ResumenEventos.kt     | Falta línea vacía al final del archivo.                                     | Añadí un salto de línea al final.                                        | [a8a4a74](https://github.com/obezeq/entornos-linting-taskmanager-cliente/commit/a8a4a74986c85e965fbcef91ffada7c1b894abe6)  |
+| 3 | WildcardImport       | ActividadServiceTest.kt | Importación con `.*` en lugar de clases específicas.                       | Reemplacé por imports detallados.                                        | [2911c28](https://github.com/obezeq/entornos-linting-taskmanager-cliente/commit/2911c28bec509f3c3d560e013d40e972f709a38b)  |
+| 4 | UnusedPrivateMember  | ActividadService.kt   | Método `verificarSubtareas` no utilizado.                                   | Eliminé el método.                                                       | [7a3f0eb](https://github.com/obezeq/entornos-linting-taskmanager-cliente/commit/7a3f0eb329b1c532e18e417369d348e1182e4754)  |
+| 5 | TooGenericExceptionCaught | ActividadService.kt | Captura genérica de `Exception` en `crearTarea()`.                         | Cambié a `IllegalArgumentException` + logging específico.                | [d41437a](https://github.com/obezeq/entornos-linting-taskmanager-cliente/commit/d41437a7aab2f52548af45c975ca5d995723efc7)  |
+
+---
+
+## 3. Personalización de Configuración
+
+**Regla Modificada:** `LongParameterList`
+- **Antes:** Límite de 5 parámetros por defecto.
+- **Después:**
+  ```yaml
+  complexity:
+    LongParameterList:
+      functionThreshold: 6
+      constructorThreshold: 6
+  ```
+- **Impacto:** Permitió mantener constructores como el de `Evento` sin violar reglas (**ENLACE ARCHIVO: PONER DESPUES EN GITHUB**).
+
+---
+
+## 4. Preguntas de Reflexión
+
+### 1.a ¿Qué herramienta has usado?
+- He usado el plugin de Detekt para el análisis estático del código de mi proyecto en Kotlin. 
+- Me ha ayudado a detectar code smells y mantener estándares muy facilmente.
+
+### 1.b Características principales
+- Más de 200 reglas configurables, lo cual hace que el plugin sea muy "responsive", y que se adapte a las necesidades del desarrollador sea las que sea.
+- Integración con Gradle, me ha permitido integrarlo en Gradle muy facilmente, lo que hace que este plugin sea perfecto si se busca una agilidad y integridad en cualquier dispositivo que se genere el reporte.
+- Genera informes HTML/XML, gracias a los informes muy vistosos de HTML/XML, pueden ser leidos de forma muy facil visualmente, a su vez que permite que estos se envien a otros departamentos para su posterior análisis sin necesidad de la perdida te tiempo por parte del desarrollador para generar estos.
+
+### 1.c Beneficios
+- Gracias a esta herramienta permite al desarrollador mejorar el código para que sea mas limpio y mantenible a largo plazo.
+- Genera una detección temprana de malas prácticas, muy útil para no arrastrar estas a lo largo del código, siendo dificiles y tediosas de eliminar en el largo plazo cuando el código aumente su volumen.
+
+```markdown
+### 2. Análisis de Errores Clave
+
+#### 2.a Error que más mejoró mi código  
+**`TooGenericExceptionCaught` en `crearTarea()`:**  
+Al principio tenía un `catch (Exception)` que capturaba *cualquier* error, incluso los inesperados. Esto hacía difícil rastrear fallos específicos. Al cambiarlo para capturar solo `IllegalArgumentException` (que es el error que realmente esperaba), el código quedo más claro. Ahora, si hay un problema de validación (como una descripción vacia), el error se maneja de forma específica, y los demas errores se registran como "inesperados". Esto hace el debugging mucho más eficiente.
+
+#### 2.b ¿La solución fue adecuada?  
+Totalmente. Entendí que al usar excepciones genéricas podía estar ocultando errores graves sin querer. La solución de capturar primero la excepción específica y luego una general (pero con un log detallado) me parece un equilibrio perfecto entre robustez y claridad.
+
+#### 2.c ¿Por qué ocurrió este error?  
+Por prisas. Cuando implementé `crearTarea()`, usé `Exception` para terminar rápido el código sin pensar en mantenimiento a largo plazo. Detekt me hizo ver que esto era una mala práctica que podía llevar a bugs difíciles de detectar.
+
+---
+
+### 3. Personalización de Detekt
+
+#### 3.a Configuraciones disponibles  
+Detekt permite:  
+- **Activar/desactivar reglas** (ej: deshabilité `MaxLineLength` temporalmente)  
+- **Ajustar umbrales** (complejidad ciclomática, parámetros por método)  
+- **Listas blancas** (ignorar números mágicos como 0 o 1)  
+
+#### 3.b Cambio principal en configuración  
+Modifiqué `LongParameterList` en `detekt.yml`:  
+```yaml
+complexity:
+  LongParameterList:
+    functionThreshold: 6  # Por defecto era 5
+    constructorThreshold: 6
+```
+
+#### 3.c Impacto real en el código
+**Antes:** El constructor de `Evento` tenía 6 parámetros y Detekt lo marcaba como error:
 ```kotlin
-class ActividadService(
-    private val repositorio: IActividadRepository,
-    private val userRepository: UserRepository
+// Detekt: "Too many parameters (6 > 5)"
+class Evento(
+    id: Long, 
+    fechaCreacion: String,
+    descripcion: String,
+    fecha: String,
+    ubicacion: String,
+    etiquetas: List<String>
 )
 ```
 
----
-
-## 2. Identificación de Métodos
-| Método | Parámetros | Resultado Esperado |
-|--------|------------|--------------------|
-| `crearTarea()` | `descripcion: String` | Añade tarea al repositorio |
-| `crearEvento()` | `descripcion, fecha, ubicacion` | Valida fecha y crea evento |
-| `listarActividades()` | - | Retorna lista completa |
-| `cambiarEstadoTarea()` | `tareaId, opcionElegida` | Actualiza estado o lanza excepción |
-| `obtenerResumenTareas()` | - | Estadísticas de tareas |
-
-*Tabla completa en Anexo I*
-
----
-
-## 3. Diseño de Casos de Prueba
-### Tabla Resumen (Métodos Clave)
-| Método | Caso de Prueba | Mock Config | Acción | Resultado Esperado |
-|--------|----------------|-------------|--------|--------------------|
-| `crearTarea` | Descripción válida | Repo vacío | `crearTarea("Revisar docs")` | repo.agregar() llamado 1 vez |
-| `crearTarea` | Descripción vacía | Repo vacío | `crearTarea("")` | Lanza `IllegalArgumentException` |
-| `cambiarEstadoTarea` | Subtareas pendientes | Tarea con subtareas no finalizadas | `cambiarEstado(3)` | Lanza `IllegalStateException` |
-| `listarActividades` | Repo con 2 actividades | Mock retorna 2 actividades | `listarActividades()` | Lista con tamaño 2 |
-
-*Tabla completa en Anexo II*
-
----
-
-## 4. Implementación de Tests
-### Estructura con Kotest
+**Después:** Tras ajustar el umbral, el mismo constructor pasó las validaciones sin cambiar su funcionalidad:
 ```kotlin
-class ActividadServiceTest : DescribeSpec({
-    val actividadRepo = mockk<IActividadRepository>()
-    val servicio = ActividadService(actividadRepo, mockk())
-
-    describe("Método crearTarea") {
-        context("Caso nominal: descripción válida") {
-            every { actividadRepo.agregar(any()) } returns Unit
-            
-            it("Debería guardar en repositorio") {
-                servicio.crearTarea("Prueba")
-                verify(exactly = 1) { actividadRepo.agregar(any()) }
-            }
-        }
-    }
-})
+// Ahora es válido
+class Evento(...)  # Mismos 6 parámetros
 ```
-
-### Técnicas Usadas:
-- **MockK** para simular repositorios
-- **Verificaciones** con `shouldBe` y `shouldThrow`
-- **Given-When-Then** implícito en la estructura DescribeSpec
 
 ---
 
-## 5. Ejecución y Resultados
-```bash
-./gradlew test
-```
+**Reflexión final:**  
+Al principio me frustró ver tantos errores en Detekt pensé que estaba haciendo algo mal mientras ejecutaba el Detekt, pero ahora entiendo que era simplemente el reporte que te mostraba y que cada warning es una oportunidad para mejorar mi código.
 
-![Ejecución de gradlew test](https://raw.githubusercontent.com/obezeq/entornos-pruebas-unitarias-taskmanager-cliente/refs/heads/master/img/gradlew-running.png)
-
-**Reporte Final:**
-| Total Tests | Pasaron | Fallaron | Tiempo |
-|-------------|---------|----------|--------|
-| 13          | 13      | 0        | 14s   |
-
-**Log de Ejecución:**
-```
-BUILD SUCCESSFUL in 14s
-5 actionable tasks: 2 executed, 3 up-to-date
-```
-
-![gradlew test satisfactorio](https://raw.githubusercontent.com/obezeq/entornos-pruebas-unitarias-taskmanager-cliente/refs/heads/master/img/gradlew-test-successful.png)
-
----
-
-## Anexo I - Lista Completa de Métodos del ActividadService
-
-| Método                 | Parámetros                                      | Resultado Esperado                                                                 |
-|------------------------|------------------------------------------------|-----------------------------------------------------------------------------------|
-| `crearTarea`           | `descripcion: String`                          | Tarea creada en repositorio                                                       |
-| `crearEvento`          | `descripcion: String`, `fecha: String`, `ubicacion: String` | Evento validado y almacenado                                                    |
-| `listarActividades`    | -                                              | Lista completa de actividades                                                    |
-| `crearSubtarea`        | `parentId: Long`, `descripcion: String`        | Subtarea asociada a tarea padre                                                  |
-| `cambiarEstadoTarea`   | `tareaId: Long`, `opcionElegida: Int`          | Actualiza estado o lanza excepción por subtareas pendientes                       |
-| `obtenerResumenTareas` | -                                              | Estadísticas de tareas (totales, por estado, subtareas)                          |
-| `obtenerEventosProgramados` | -                                        | Conteo de eventos por periodo (hoy, mañana, etc)                                 |
-| `crearUsuario`         | `nombre: String`, `email: String`              | Usuario creado con validación de email                                           |
-| `listarUsuarios`       | -                                              | Lista completa de usuarios registrados                                           |
-| `tareasPorUsuario`     | `usuarioId: Int`                               | Tareas asignadas a un usuario específico                                          |
-| `filtrarPorTipo`       | `tipo: String`                                 | Lista filtrada por tipo (Tarea/Evento)                                           |
-| `filtrarPorEstado`     | `estado: Estado`                               | Tareas con estado específico                                                      |
-| `buscarActividad`      | `id: Long`                                     | Actividad encontrada o null                                                      |
-
----
-
-## Anexo II - Casos de Prueba Completos
-
-| Método                 | Tipo Prueba                    | Estado Inicial Mock                 | Acción                                 | Resultado Esperado                           |
-|------------------------|--------------------------------|--------------------------------------|----------------------------------------|----------------------------------------------|
-| `crearTarea`           | Descripción válida            | Repositorio vacío                    | `crearTarea("Revisar docs")`           | `agregar()` llamado 1 vez                    |
-| `crearTarea`           | Descripción vacía             | Repositorio vacío                    | `crearTarea("")`                       | Lanza `IllegalArgumentException`            |
-| `crearEvento`          | Fecha inválida                | -                                    | `crearEvento(..., "30-02-2024", ...)`  | Lanza `DateTimeParseException`              |
-| `crearEvento`          | Ubicación vacía               | -                                    | `crearEvento(..., "", ...)`            | Lanza `IllegalArgumentException`            |
-| `listarActividades`    | Repositorio con 2 actividades | Mock retorna 2 actividades           | `listarActividades()`                  | Lista con tamaño 2                           |
-| `cambiarEstadoTarea`   | Subtareas pendientes          | Tarea con subtareas no finalizadas   | `cambiarEstado(3)`                     | Lanza `IllegalStateException`                |
-| `cambiarEstadoTarea`   | Cambio válido                 | Tarea en estado ABIERTA              | `cambiarEstado(2)`                     | Estado actualizado a EN_PROGRESO             |
-| `obtenerResumenTareas` | 3 tareas (1 finalizada)       | Mock con 3 tareas                    | `obtenerResumenTareas()`               | `totalTareas=3`, `porEstado[FINALIZADA]=1`   |
-| `crearUsuario`         | Email inválido                | Repositorio vacío                    | `crearUsuario("Ana", "ana@")`          | Lanza `IllegalArgumentException`            |
-| `crearUsuario`         | Datos válidos                 | Repositorio vacío                    | `crearUsuario("Juan", "juan@mail.com")`| Usuario agregado al repositorio              |
-| `tareasPorUsuario`     | Usuario con 2 tareas          | Mock con 2 tareas asignadas          | `tareasPorUsuario(1)`                  | Lista con 2 tareas                           |
-| `filtrarPorTipo`       | Tipo "tarea"                  | Mock con 3 tareas y 2 eventos        | `filtrarPorTipo("tarea")`              | Lista con 3 elementos                        |
-| `buscarActividad`      | ID existente                  | Mock con actividad ID=1              | `buscarActividad(1)`                   | Retorna la actividad                         |
-| `buscarActividad`      | ID inexistente                | Repositorio vacío                    | `buscarActividad(999)`                 | Retorna null                                 |
-
-*(25 casos de prueba implementados en total)*
+### 4 Conclusiones
+- Creo que herramientas como Detekt son **esenciales** para proyectos profesionales y de producción.
+- Automatizan revisiones que humanos podrían pasar por alto, incluso te genera un `html` para que los desarrolles puedan visualizarlo de forma muy visual y poder mandar directamente a otros departamentos sin que el desarrollador tenga que perder el tiempo en escribir tal informe.
+- Muy util para detectar errores y mejoras de código que garantizan una mejor seguridad de código.

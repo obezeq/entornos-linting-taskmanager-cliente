@@ -24,7 +24,7 @@ class ActividadService(
             repositorio.agregar(tarea)
             Logger.info("Tarea creada exitosamente | ID:${tarea.id} | Desc:${descripcion.take(15)}...")
         } catch (e: IllegalArgumentException) {
-            Logger.error("Error de validación: ${e.message}", e)
+            Logger.error("Error de vazlidación: ${e.message}", e)
             throw e
         } catch (e: Exception) {
             Logger.error("Error inesperado", e)
