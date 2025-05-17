@@ -65,13 +65,8 @@
 **Regla Modificada:** `LongParameterList`
 - **Antes:** Límite de 5 parámetros por defecto.
 - **Después:**
-  ```yaml
-  complexity:
-    LongParameterList:
-      functionThreshold: 6
-      constructorThreshold: 6
-  ```
-- **Impacto:** Permitió mantener constructores como el de `Evento` sin violar reglas (**ENLACE ARCHIVO: PONER DESPUES EN GITHUB**).
+https://github.com/obezeq/entornos-linting-taskmanager-cliente/blob/65110b4b374e7322be7f6f8ce8cebb6702a9c9fa/config/detekt.yml#L12-L15
+- **Impacto:** Permitió mantener constructores como el de `Evento` sin violar reglas 
 
 ---
 
@@ -126,17 +121,7 @@ complexity:
 #### 3.c Impacto práctico en el código
 **Situación inicial:**  
 El constructor de la clase `Evento` tenía 6 parámetros esenciales para su funcionamiento:
-```kotlin
-// Generaba error: "Demasiados parámetros (6 > 5)"
-class Evento(
-    id: Long,
-    fechaCreacion: String,
-    descripcion: String,
-    fecha: String,
-    ubicacion: String,  // Parámetro 5
-    etiquetas: List<String>  // Parámetro 6
-)
-```
+https://github.com/obezeq/entornos-linting-taskmanager-cliente/blob/65110b4b374e7322be7f6f8ce8cebb6702a9c9fa/src/main/kotlin/dominio/Evento.kt#L7-L14
 
 **Después del ajuste:**  
 El mismo constructor dejó de generar warnings, permitiéndome mantener la estructura sin comprometer la legibilidad:
