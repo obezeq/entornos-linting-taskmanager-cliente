@@ -106,32 +106,44 @@ Por prisas. Cuando implementé `crearTarea()`, usé `Exception` para terminar r�
 
 ### 3. Personalización de Detekt
 
-#### 3.a Configuraciones disponibles  
-Detekt permite:  
-- **Activar/desactivar reglas** (ej: deshabilité `MaxLineLength` temporalmente)  
-- **Ajustar umbrales** (complejidad ciclomática, parámetros por método)  
-- **Listas blancas** (ignorar números mágicos como 0 o 1)  
+#### 3.a Posibilidades de configuración  
+Detekt ofrece flexibilidad para adaptarse a las necesidades del proyecto. Las principales opciones que utilicé fueron:  
 
-#### 3.b Cambio principal en configuración  
-Modifiqué `LongParameterList` en `detekt.yml`:  
+- **Activación/desactivación de reglas:** Por ejemplo, deshabilité temporalmente `MaxLineLength` para centrarme en errores más críticos durante la fase inicial.  
+- **Ajuste de umbrales numéricos:** Modifiqué límites como el número máximo de parámetros en funciones o la complejidad ciclomática permitida.  
+- **Excepciones específicas:** Creé listas blancas para ignorar números comunes como 0 o 1 en la regla `MagicNumber`, evitando falsos positivos.  
+
+#### 3.b Cambio significativo en configuración  
+El ajuste más relevante fue en la regla `LongParameterList`. Originalmente Detekt marcaba error con más de 5 parámetros, pero en mi código varios constructores necesitaban 6. Modifiqué el archivo `detekt.yml` así:  
+
 ```yaml
 complexity:
   LongParameterList:
-    functionThreshold: 6  # Por defecto era 5
+    functionThreshold: 6  # Valor original: 5
     constructorThreshold: 6
 ```
 
-#### 3.c Impacto real en el código
-**Antes:** El constructor de `Evento` tenía 6 parámetros y Detekt lo marcaba como error:
+#### 3.c Impacto práctico en el código
+**Situación inicial:**  
+El constructor de la clase `Evento` tenía 6 parámetros esenciales para su funcionamiento:
 ```kotlin
-// Detekt: "Too many parameters (6 > 5)"
+// Generaba error: "Demasiados parámetros (6 > 5)"
 class Evento(
-    id: Long, 
+    id: Long,
     fechaCreacion: String,
     descripcion: String,
     fecha: String,
-    ubicacion: String,
-    etiquetas: List<String>
+    ubicacion: String,  // Parámetro 5
+    etiquetas: List<String>  // Parámetro 6
+)
+```
+
+**Después del ajuste:**  
+El mismo constructor dejó de generar warnings, permitiéndome mantener la estructura sin comprometer la legibilidad:
+```kotlin
+// Ahora válido gracias al nuevo umbral
+class Evento(
+    // Mismos 6 parámetros
 )
 ```
 
