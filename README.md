@@ -31,6 +31,14 @@
 4. **Configuré las reglas** en `config/detekt.yml`, ajustando la configuración para adaptarlas al proyecto segun las necesidades.
 5. **Ejecuté el análisis** con `./gradlew detekt`. A continuación incluiré capturas de pantalla y explicaré el proceso para realizar un análisis de ejecución.
 
+**Aquí ejecuto el detekt y se prepara para su inicialización.**
+
+**Se empieza a ejecutar**
+
+**Detekt ha terminado con el análisis** y me empieza a dar los errores del código en la terminal.
+
+**A parte de los errores que me salen en la terminal, Detekt me genera un reporte** en HTML como he configurado previamente el cual se encuentra en la carpeta `build/reports/detekt`. A continuación listo cada uno de los reportes en los diferentes formatos.
+
 ---
 
 ## 2. Errores Detectados y Soluciones
@@ -75,7 +83,6 @@
 - Gracias a esta herramienta permite al desarrollador mejorar el código para que sea mas limpio y mantenible a largo plazo.
 - Genera una detección temprana de malas prácticas, muy útil para no arrastrar estas a lo largo del código, siendo dificiles y tediosas de eliminar en el largo plazo cuando el código aumente su volumen.
 
-```markdown
 ### 2. Análisis de Errores Clave
 
 #### 2.a Error que más mejoró mi código  
