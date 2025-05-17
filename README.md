@@ -32,12 +32,19 @@
 5. **Ejecuté el análisis** con `./gradlew detekt`. A continuación incluiré capturas de pantalla y explicaré el proceso para realizar un análisis de ejecución.
 
 **Aquí ejecuto el detekt y se prepara para su inicialización.**
+![Initializing Detekt](https://raw.githubusercontent.com/obezeq/entornos-linting-taskmanager-cliente/refs/heads/master/img/detekt-initializing.png)
 
 **Se empieza a ejecutar**
+![Executing Detekt](https://raw.githubusercontent.com/obezeq/entornos-linting-taskmanager-cliente/refs/heads/master/img/detekt-executing.png)
 
 **Detekt ha terminado con el análisis** y me empieza a dar los errores del código en la terminal.
+![Detekt Finished](https://raw.githubusercontent.com/obezeq/entornos-linting-taskmanager-cliente/refs/heads/master/img/detekt-reports.png)
 
 **A parte de los errores que me salen en la terminal, Detekt me genera un reporte** en HTML como he configurado previamente el cual se encuentra en la carpeta `build/reports/detekt`. A continuación listo cada uno de los reportes en los diferentes formatos.
+- [detekt.html](https://github.com/obezeq/entornos-linting-taskmanager-cliente/blob/master/build/reports/detekt/detekt.html)
+- [detekt.md](https://github.com/obezeq/entornos-linting-taskmanager-cliente/blob/master/build/reports/detekt/detekt.md)
+- [detekt.sarif](https://github.com/obezeq/entornos-linting-taskmanager-cliente/blob/master/build/reports/detekt/detekt.sarif)
+- [detekt.txt](https://github.com/obezeq/entornos-linting-taskmanager-cliente/blob/master/build/reports/detekt/detekt.txt)
 
 ---
 
